@@ -1,8 +1,8 @@
 class behavior_v1():    
+    globals = None
 
-    #no dependencies
     def setDependencies(self, modules):
-        pass
+        self.globals = modules.getModule("globals")
     
     #calculate in which direction the robot should walk
     def calcDirection(self, observation):

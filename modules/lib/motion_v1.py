@@ -1,8 +1,8 @@
 class motion_v1():    
+    globals = None
 
-    #no dependencies
     def setDependencies(self, modules):
-        pass
+        self.globals = modules.getModule("globals")
         
     #return state of robot: fallen etc
     def getState(self):

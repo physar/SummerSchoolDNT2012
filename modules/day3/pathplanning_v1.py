@@ -1,7 +1,9 @@
 class pathplanning_v1():    
+    globals = None
 
     def setDependencies(self, modules):
-        pass
+        self.globals = modules.getModule("globals")
+
     
     # get next step in path, based on map and current pose
     def nextStep(self, pose, map):

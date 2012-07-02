@@ -20,8 +20,10 @@ VERBOSE = 1
 moduledict["main"]          = ["main", "main"]
 #tools module:  contains some pre-defined tools which can be used
 moduledict["tools"]         = [1, "tools_v1"]
-#motion module:     contains pre-defined motion patterns
+#motion module: contains pre-defined motion patterns
 moduledict["motion"]        = [1, "motion_v1"]
+#global module: contains global data
+moduledict["globals"]        = [1, "globals"]
 
 ####
 ## user modules, to be implemented

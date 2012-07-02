@@ -1,12 +1,14 @@
 class main():
+    globals         = None
     tools           = None
     motion          = None
     behaviour       = None
     vision          = None
     pathplanning    = None
     localization    = None
-    
+
     def setDependencies(self, modules):
+        self.globals        = modules.getModule("globals")
         self.tools          = modules.getModule("tools")
         self.motion         = modules.getModule("motion")
         self.behaviour      = modules.getModule("behaviour")
@@ -17,6 +19,13 @@ class main():
     def start(self):
         finished = false
         map = tools.loadMap()
+        
+        #ipadress of NAO
+        globals.setIPadress("192.168.1.43")
+        globals.createProxies()
+        
+        #subscribe to camera, to recieve images
+        self.tools.subscribe()
         
         while (finished == false):
         

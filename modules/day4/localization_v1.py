@@ -1,7 +1,9 @@
 class localization_v1():    
+    globals = None
 
     def setDependencies(self, modules):
-        pass
+        self.globals = modules.getModule("globals")
+
     
  #update pose of robot (grid localization)
     def updatePose(self, observation, map):
