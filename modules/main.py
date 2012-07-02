@@ -20,6 +20,9 @@ class main():
         #ipadress of NAO
         self.globals.setIPadress("192.168.1.18")
         self.globals.createProxies()
+
+        #init motions
+        self.motion.init()
         
         #subscribe to camera, to recieve images
         self.tools.cSubscribe()
@@ -28,6 +31,9 @@ class main():
         imgData = self.tools.getSnapshot()
         img = imgData[0]
         self.tools.saveImage(img, "test.png")
+        self.motion.stiff()
+        self.motion.normalPose()
+        
         exit()
         
         finished = False

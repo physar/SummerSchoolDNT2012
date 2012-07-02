@@ -1,6 +1,7 @@
 import cv
 from naoqi import ALProxy
 from PIL import Image
+import math
 
 class tools_v1():    
     globals = None
@@ -60,7 +61,15 @@ class tools_v1():
     def saveImage(self, img, name):
         """ save image, using given name """ 
         cv.SaveImage(name, img)
-      
+    
+    def minimizedAngle( angle ):
+        """ maps an angle to the interval [pi, pi] """
+        if angle > math.pi:
+            angle -= 2*math.pi
+        if angle <= -math.pi:
+            angle += 2*math.pi
+        return angle
+    
     # process img, get QR-code data
     def getBeaconObservation(self, img):
         pass

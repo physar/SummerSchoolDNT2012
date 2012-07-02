@@ -18,6 +18,7 @@ class globals():
     def createProxies(self):
         """ Set all proxies used by other modules """
         self.motProxy = ALProxy( "ALMotion", self.ipadress, 9559 )
+        self.posProxy = ALProxy( "ALRobotPose", self.ipadress, 9559 )
         self.vidProxy = ALProxy( "ALVideoDevice", self.ipadress, 9559 )
         self.memProxy = ALProxy( "ALMemory", self.ipadress, 9559 ) 
         self.ledProxy = ALProxy( "ALLeds", self.ipadress, 9559 ) 
