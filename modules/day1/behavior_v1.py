@@ -12,7 +12,9 @@ class behavior_v1():
     
         Walk towards an observed object.
         """        
-        print "Walking towards an observed object."
+        print "Behaviour: Walking towards an observed object."
+        import time
+        now = time.time()
         
         # while not at the desired location
         while not self.isFinished(observation):
@@ -22,10 +24,35 @@ class behavior_v1():
         
             # find the desired walking direction
             direction = self.calcDirection(observation)
-            print "Found direction based on obersvation is", direction
+            print "Found direction based on observation:", direction
+            
+            # update the observation, based on time and velocity 
+            interval = time.time() - now
+            observation = self.motionUpdate(direction, observation, interval)
+            now = time.time()
+            print "Found observation based on direction:", observation
             
             # update the walking parameters
             self.adjustWalk(direction)
+    
+    def motionUpdate(self, direction, observation, interval):
+        """
+        INPUT: direction [x,y,theta]
+        RETURN: new observation, based on distance
+        """
+        x,y,theta = direction
+        sig, distance, bearing = observation
+        
+        # calculate walked distance based on walking direction
+        walked_distance_x = interval * ((x>0) * 0.05)
+        walked_distance_y = interval * ((y>0) * 0.05)
+        walked_distance_t = interval * ((theta > 0) * 0.7 )
+        
+        # update distance, bearing
+        from math import sqrt
+        new_distance = distance - sqrt(walked_distance_x**2 + walked_distance_y**2)
+        new_bearing = bearing - walked_distance_t
+        return sig, new_distance, new_bearing
     
     def adjustWalk(self, direction):
         """
@@ -62,4 +89,5 @@ class behavior_v1():
         Has robot arrived at the finish location?
         """
         # TODO: check if the robot should stop walking!
-        return True
+        if observation[1] + observation[2] < 0.01:
+            return True
