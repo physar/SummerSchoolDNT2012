@@ -17,17 +17,23 @@ class main():
         self.localization   = modules.getModuleNone("localization")
         
     def start(self):
-        finished = false
-        map = tools.loadMap()
-        
         #ipadress of NAO
-        globals.setIPadress("192.168.1.43")
-        globals.createProxies()
+        self.globals.setIPadress("192.168.1.18")
+        self.globals.createProxies()
         
         #subscribe to camera, to recieve images
-        self.tools.subscribe()
+        self.tools.cSubscribe()
         
-        while (finished == false):
+        #test image
+        imgData = self.tools.getSnapshot()
+        img = imgData[0]
+        self.tools.saveImage(img, "test.png")
+        exit()
+        
+        finished = False
+        map = tools.loadMap()
+        
+        while (finished == False):
         
             #check is robot is fallen
             state = self.motion.getState()
@@ -41,7 +47,7 @@ class main():
             if (self.vision != None):
                 #Day 2: Blob recognition
                 observation = self.vision.getBeaconObservation(img)
-            else
+            else:
                 #QR code recognition
                 observation = self.tools.getBeaconObservation(img)
              
@@ -62,7 +68,7 @@ class main():
                 if (self.localization != None):
                     #Day 4: Grid localization
                     pose = self.localization.updatePose(observation, map)
-                else
+                else:
                     #build in localization
                     pose = self.tools.updatePose(observation, map)        
                 #pose: [x,y,theta]

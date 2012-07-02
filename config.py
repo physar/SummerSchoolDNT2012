@@ -36,14 +36,14 @@ moduledict["globals"]        = [1, "globals"]
 # - <filename>          name of file/class (without.py)
 
 #[Day1] behavioir module:  handles reactive behaviour
-moduledict["behavior"]      = [1, "behavior_v1"]
+moduledict["behaviour"]      = [1, "behavior_v1"]
 #[Day2] vision module:     interacts with 'blobs'
 moduledict["vision"]        = [0, "vision_v1"]
 #[Day3] pathplanning:      map handling and A*
 moduledict["pathplanning"]  = [0, "pathplanning_v1"]
 #[Day4] localization:      implementation of gridlocalization
 moduledict["localization"]  = [0, "localization_v1"]
-S
+
 ###########################
 # start & run framework
 ###########################

@@ -1,7 +1,7 @@
 import cv
-import Image
 from naoqi import ALProxy
-    
+from PIL import Image
+
 class tools_v1():    
     globals = None
 
@@ -14,24 +14,22 @@ class tools_v1():
     #RETURN
     # map representation: double list? dict?
     
-    def unsubscribe(self):
-        """Try to unsubscribe from the camera""" 
+    #unsubscribe from camera
+    def cUnsubscribe(self):
+        """ Try to unsubscribe from the camera """ 
         try:
             self.globals.vidProxy.unsubscribe("python_GVM")
         except Exception as inst:
             print "Unsubscribing impossible:", inst
-    
-    def subscribe(self, resolution=1):
-        """ subscribe() -> String visionID
 
-        Subscribe to the camera feed.
-        
-        """
-        self.unsubscribe()
-        # subscribe(gvmName, resolution={0,1,2}, colorSpace={0,9,10,11,12,13},
-        #           fps={5,10,15,30}
-        return self.globals.vidProxy.subscribe("python_GVM", resolution, 11, 30)
-            
+    #subscribe to camera        
+    def cSubscribe(self, resolution=1):
+        """ Subscribe to the camera feed. """
+        self.cUnsubscribe()
+        # subscribe(gvmName, resolution={0,1,2}, colorSpace={0,9,10,11,12,13}, fps={5,10,15,30}
+        self.globals.vidProxy.subscribe("python_GVM", resolution, 11, 30)
+       
+       
     # get snapshot from camera
     def getSnapshot(self):
         """ snapShot() -> iplImg, (cameraPos6D, headAngles)
@@ -43,7 +41,7 @@ class tools_v1():
         # Make image
         camPos = self.globals.motProxy.getPosition("CameraBottom", 2, True)
         headAngles = self.globals.motProxy.getAngles(["HeadPitch", "HeadYaw"], True)
-        shot = self.gloabls.vidProxy.getImageRemote(self.visionID)
+        shot = self.globals.vidProxy.getImageRemote("python_GVM")
         
         # Get image
         # shot[0]=width, shot[1]=height, shot[6]=image-data
@@ -56,13 +54,13 @@ class tools_v1():
         cv.SetData(image, picture.tostring(), picture.size[0]*3)
         hsvFrame = cv.CreateImage(cv.GetSize(image), cv.IPL_DEPTH_8U, 3)
         cv.CvtColor(image, hsvFrame, cv.CV_BGR2HSV)
-    
+                
         return (hsvFrame, (camPos, headAngles))
-    
-    
-    #RETURN:
-    # HSV image of bottom camera?
        
+    def saveImage(self, img, name):
+        """ save image, using given name """ 
+        cv.SaveImage(name, img)
+      
     # process img, get QR-code data
     def getBeaconObservation(self, img):
         pass
