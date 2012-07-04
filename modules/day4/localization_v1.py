@@ -18,8 +18,6 @@ class localization_v1():
         """
 
         edges, qrpos, valid_moves = mazeParser.parseMaze()
-        for move in valid_moves:
-            print move, valid_moves[move]
         
         # initialize belief in the map (4x4 positions, 4 orientations)
         b = 1/ ( 4.0**3 )
@@ -51,14 +49,21 @@ class localization_v1():
                 self.walk(dx, dy, dt)
                 
                 # update the belief
+                print "\nMotion", motion, ", updating belief..  \n"
                 motion_map_belief = self.motion_update(motion, map_belief, edges, valid_moves)
 
-                observation = self.perceive()
+                observation = [0,2,0]
                 # if an observation is made, use it to update the belief
                 if observation:
+                    print "Observation: ", observation, ", updating belief..\n"
                     map_belief = self.vision_update(observation, motion_map_belief, valid_moves)
                 else:
+                    "No observerved features, the motion-updated belief will be used!"
                     map_belief = motion_map_belief
+
+
+                # print it in a fashionable way!
+                self.prettyPrint(map_belief)
             else:
                 print "That move is not valid!"
                 
@@ -122,8 +127,7 @@ class localization_v1():
                         
         # normalize the array map (evenly spread out probabilities)
         new_map_belief = self.normalize_3D(new_map_belief)
-        # print it in a fashionable way!
-        self.prettyPrint(new_map_belief)
+
         return new_map_belief
 
     def is_valid_move(self, position, motion, valid_moves):
@@ -146,21 +150,25 @@ class localization_v1():
         # if all of the above was evaded, the move is valid
         #print "Move", x,y,"{0:.2f} to".format(t), x+u,y+v, "is valid"
         return True
-    
-    #update pose of robot (grid localization)
+
     def vision_update(self, observation, map_belief, valid_moves):
         """
         INPUT: observation, map_edges
         RETURNS: map_belief
 
-        """    
+        Update the map of belief based on observation of blobs
+        """
+        self.prettyPrint(map_belief)
+        
+        # the distance is in gridcoordinates , e.g. '2' instead of 166 cm.
         distance = self.parseObservation(observation)
         for col in range(4):
             for row in range(4):
                 for orientation in range(4):
                     location = (col, row, orientation)
                     if not self.is_valid_perception(location, distance, valid_moves):
-                        map_belief[col][row][orientation] = 0    
+                        map_belief[col][row][orientation] = 0
+                        
         # normalize it (spread out frequencies evenly)
         new_map_belief = self.normalize_3D(map_belief)
         return new_map_belief
@@ -179,24 +187,33 @@ class localization_v1():
             return False
         
         x, y, t = location
-
         # an observation is possible if the moves needed to reach
         # the corresponding cell are valid
+        
         if t == 0:
+            if x + distance > 4:
+                return False
             for x_wall in range(x, x+distance):
-                if not (x+1, y) in valid_moves[(x,y)]:
+                if not (x_wall+1, y) in valid_moves[(x_wall,y)]:
                     return False
         elif t == 1:
-            for x_wall in range(y, y+distance):
-                if not (x, y+1) in valid_moves[(x,y)]:
+            if y + distance > 4:
+                return False
+            for y_wall in range(y, y+distance):
+                if not (x, y_wall+1) in valid_moves[(x,y_wall)]:
                     return False
         elif t == 2:
+            if x - distance < 0:
+                return False
             for x_wall in range(x-distance, x):
-                if not (x+1, y) in valid_moves[(x,y)]:
+                if not (x_wall+1, y) in valid_moves[(x_wall,y)]:
                     return False
+                
         elif t == 3:
-            for x_wall in range(y-distance, y):
-                if not (x, y+1) in valid_moves[(x,y)]:
+            if y - distance < 0:
+                return False
+            for y_wall in range(y-distance, y):
+                if not (x, y_wall+1) in valid_moves[(x,y_wall)]:
                     return False
         else:
             return False
