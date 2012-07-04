@@ -40,11 +40,13 @@ class localization_v1():
 
             # if the move is possible, execute it
             x, y, t = state
-            if self.is_valid_move(state, motion, valid_moves):
-                dx = int(cos(t)) * motion[0]
-                dy = int(sin(t)) * motion[1]
-                dt = motion[2]
-                newstate = x+dx, y+dy, t+dt
+            dx = int(cos(t)) * motion[0]
+            dy = int(sin(t)) * motion[1]
+            dt = motion[2]
+            newstate = x+dx, y+dy, t+dt
+            
+            if self.is_valid_move(state, (dx,dy,dt), valid_moves):
+                # rotate the motion based on 
                 state = newstate
                 self.walk(dx, dy, dt)
                 
@@ -55,6 +57,8 @@ class localization_v1():
                 observation = [0,2,0]
                 # if an observation is made, use it to update the belief
                 if observation:
+                    self.prettyPrint(motion_map_belief)
+
                     print "Observation: ", observation, ", updating belief..\n"
                     map_belief = self.vision_update(observation, motion_map_belief, valid_moves)
                 else:
@@ -115,7 +119,7 @@ class localization_v1():
 
                     old_location = (old_x, old_y, old_t)
                     
-                    if self.is_valid_move(old_location, [u_x_rot,u_y_rot,u_t], valid_moves):
+                    if self.is_valid_move(old_location, (u_x_rot,u_y_rot,u_t), valid_moves):
                         # belief is transferred from old positions to the new ones
                         belief = map_belief[old_x][old_y][old_t]
                         new_map_belief[col][row][orientation] += belief
@@ -139,14 +143,25 @@ class localization_v1():
         """
         # the position contains x, y and orientation
         x, y, t = position
+        # the motion is an already rotated vector containing the
+        # x and y-offset, as seen from the nao
         u, v, w = motion
+
         
-        # moves must end IN the maze
-        if not(0 <= x + u < 4 and 0 <= y + v < 4):
+        # if there is a walking motion
+        if (u == 1 or v == 1) and not (u==1 and v==1):
+            # moves must end IN the maze
+            if not(0 <= x + u < 4 and 0 <= y + v < 4):
+                return False
+            # and there must not be edges in the way
+            if not((x, y) in valid_moves[(x+u,y+v)] ):
+                return False
+        elif w > 0 and u == 0 and v == 0:
+            # if there is a rotation, the move is always valid
+            return True
+        else:
             return False
-        # and there must not be edges in the way
-        if not((x, y) in valid_moves[(x+u,y+v)] ):
-            return False
+            
         # if all of the above was evaded, the move is valid
         #print "Move", x,y,"{0:.2f} to".format(t), x+u,y+v, "is valid"
         return True
@@ -157,67 +172,73 @@ class localization_v1():
         RETURNS: map_belief
 
         Update the map of belief based on observation of blobs
-        """
-        self.prettyPrint(map_belief)
-        
+        """        
         # the distance is in gridcoordinates , e.g. '2' instead of 166 cm.
         distance = self.parseObservation(observation)
         for col in range(4):
             for row in range(4):
                 for orientation in range(4):
                     location = (col, row, orientation)
-                    if not self.is_valid_perception(location, distance, valid_moves):
-                        map_belief[col][row][orientation] = 0
-                        
+                    # calculate the probability of the observation given the location
+                    prob_observation = self.prob_perception(location,
+                                                            distance,
+                                                            valid_moves)
+                    # and find the new belief using this probability
+                    new_belief = prob_observation * map_belief[col][row][orientation]
+                    # then assign that to the correct place in map_belief
+                    map_belief[col][row][orientation] = new_belief
+                    
         # normalize it (spread out frequencies evenly)
         new_map_belief = self.normalize_3D(map_belief)
         return new_map_belief
     
-    def is_valid_perception(self, location, distance, valid_moves):
+    def prob_perception(self, location, distance, valid_moves):
         """
         INPUT: location, distance, valid_moves (dict)
-        RETURNS: True/False
+        RETURNS: prob_observation (float between 0 and 1)
 
-        Checks if an observation is possible from the current location,
-        given the edges
+        Checks if a given distance is possible from the current location,
+        given the edges, and assigns a probability to the observation. 
         """
 
-        # a distance must be positive
-        if distance < 0:
-            return False
-        
+        # find what the distance should be , given the location
         x, y, t = location
+        real_distance = 0
         # an observation is possible if the moves needed to reach
-        # the corresponding cell are valid
-        
+        # the corresponding cell are valid.
         if t == 0:
-            if x + distance > 4:
-                return False
-            for x_wall in range(x, x+distance):
-                if not (x_wall+1, y) in valid_moves[(x_wall,y)]:
-                    return False
+            # keep walking until you hit a wall
+            while (x+1,y) in valid_moves[(x, y)]:
+                x += 1
+                real_distance += 1
         elif t == 1:
-            if y + distance > 4:
-                return False
-            for y_wall in range(y, y+distance):
-                if not (x, y_wall+1) in valid_moves[(x,y_wall)]:
-                    return False
+            while (x,y+1) in valid_moves[(x, y)]:
+                y += 1
+                real_distance += 1
         elif t == 2:
-            if x - distance < 0:
-                return False
-            for x_wall in range(x-distance, x):
-                if not (x_wall+1, y) in valid_moves[(x_wall,y)]:
-                    return False
-                
+            while (x-1,y) in valid_moves[(x, y)]:
+                x -= 1
+                real_distance += 1
         elif t == 3:
-            if y - distance < 0:
-                return False
-            for y_wall in range(y-distance, y):
-                if not (x, y_wall+1) in valid_moves[(x,y_wall)]:
-                    return False
-        else:
-            return False
-        return True
+            while (x,y-1) in valid_moves[(x, y)]:
+                y -= 1
+                real_distance += 1
+        
+        # Based on this real distance, find the probability for the found
+        # distance. Normally, this would be a continuous distribution (it
+        # would be logical to input the real distance in cm and the found
+        # distance, then use, for example, a gaussian distribution to find p).
+        # To make matters easy, the distribution has been made discrete. 
+        prob_observation = 0
+        difference = distance - real_distance
+        # if the observation was spot on, this has p = 0.8
+        if difference == 0:
+            prob_observation = 0.8
+        # if we're off one gridcell, p = 0.1
+        elif difference == 1 or difference == -1:
+            prob_observation = 0.1
+
+        return prob_observation
     
     def parseObservation(self, observation):
         """
@@ -236,8 +257,9 @@ class localization_v1():
         """
         INPUT: map_belief (size X x Y x Orientation)
 
-        Prints the map in a readable format
+        Prints the map in a (more) readable format
         """
+        print "\n\t\t\tRight\tUp\tLeft\tDown"
         print "\t\t\t{0}\t{1}\t{2}\t{3}\t".format(0, 1.57, 3.14, 4.71)
         print "----------------------------------------------------"
         for y in range(len(map_belief[0])):
@@ -246,6 +268,7 @@ class localization_v1():
                 for o in range(len(map_belief[0][0])):
                     print "{0:.2f}\t".format(map_belief[x][y][o]),
                 print ""
+        print ""
 
     def normalize_3D(self, map_belief):
         """
