@@ -18,7 +18,7 @@ class main():
         
     def start(self):
         #ipadress of NAO
-        self.globals.setIPadress("192.168.1.18")
+        self.globals.setIPadress("192.168.1.48")
         self.globals.createProxies()
 
         #init motions
@@ -30,7 +30,10 @@ class main():
         #test image
         imgData = self.tools.getSnapshot()
         img = imgData[0]
+        self.tools.saveImage(img, "hsvImage.png")
+        img = self.tools.convertColourSpace(img, 54) #HSV2BGR
         self.tools.saveImage(img, "test.png")
+        
         self.motion.stiff()
         self.motion.normalPose()
         
@@ -91,4 +94,5 @@ class main():
             
             # walk into direction
             motion.walkTo(direction)
+    
             
