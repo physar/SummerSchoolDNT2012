@@ -18,7 +18,7 @@ class main():
         
     def start(self):
         #ipadress of NAO
-        self.globals.setIPadress("192.168.1.18")
+        self.globals.setIPadress("192.168.1.35")
         self.globals.createProxies()
 
         #init motions
@@ -33,6 +33,8 @@ class main():
         self.tools.saveImage(img, "test.png")
         self.motion.stiff()
         self.motion.normalPose()
+        
+        self.behaviour.walk([0,0.2,0])
         
         exit()
         

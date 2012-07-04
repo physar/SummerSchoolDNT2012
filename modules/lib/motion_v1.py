@@ -1,3 +1,5 @@
+import time
+
 class motion_v1():    
     globals = None
     
