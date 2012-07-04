@@ -47,12 +47,10 @@ def parseMaze(filename="./maze.txt"):
             # else, look at each second (namely the '-')
             for t in xrange(start, len(data[lineNr][:-1]), 2):           
                 token = data[lineNr][t]
-                print "Real coords:", lineNr, t, token
                 # parse the tokens correctly
                 if token == "-":
                     addEdge(edges, (t/2+1, y), (t/2,   y))
                 if token == " ":
-                    print t/2, y
                     addEdge(validMoves, (t/2, y), (t/2, y-1))
         # start is either 0 or 1        
         start = (start == 0)
