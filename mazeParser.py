@@ -30,31 +30,36 @@ def parseMaze(filename="./maze.txt"):
     # init vars
     start = 1
     y = 0
+    validMoves = {}
     
     # for every position in the maze
     for lineNr in xrange(len(data)):
         # if a line containing | and digits
         if lineNr % 2 == 1:
             # parse each token seperately
-            for t in xrange(len(data[lineNr][:-1])):
+            for t in xrange(0, len(data[lineNr][:-1]), 2):
                 token = data[lineNr][t]
                 if token == "|":
                     addEdge(edges, (t/2, y+1), (t/2, y  ))
-                elif token.isdigit():
-                    qrpos[(t/2,y)] = int(token) 
+                elif token == " ":
+                    addEdge(validMoves, (t/2, y), (t/2-1, y))
         else:
             # else, look at each second (namely the '-')
             for t in xrange(start, len(data[lineNr][:-1]), 2):           
                 token = data[lineNr][t]
+                print "Real coords:", lineNr, t, token
                 # parse the tokens correctly
                 if token == "-":
                     addEdge(edges, (t/2+1, y), (t/2,   y))
+                if token == " ":
+                    print t/2, y
+                    addEdge(validMoves, (t/2, y), (t/2, y-1))
         # start is either 0 or 1        
         start = (start == 0)
         # increment y
         if start == 1:
             y += 1
-    return edges, qrpos
+    return edges, qrpos, validMoves
                 
 def addEdge(edgeDict, node1, node2):
     """
@@ -105,8 +110,11 @@ def prettyPrint(edges, qrpos):
             print ''
                     
 if __name__ == "__main__":
-    edges, qrpos = parseMaze()
-    for edge in edges:
-        print edge, edges[edge]
-    print '\n', qrpos
-    prettyPrint(edges, qrpos)
+    edges, qrpos, validMoves = parseMaze()
+    for move in validMoves:
+        print move, ":\t", validMoves[move]
+    print validMoves
+    #for edge in edges:
+    #    print edge, edges[edge]
+    #print '\n', qrpos
+    #prettyPrint(edges, qrpos)

@@ -21,4 +21,5 @@ class globals():
         self.posProxy = ALProxy( "ALRobotPose", self.ipadress, 9559 )
         self.vidProxy = ALProxy( "ALVideoDevice", self.ipadress, 9559 )
         self.memProxy = ALProxy( "ALMemory", self.ipadress, 9559 ) 
-        self.ledProxy = ALProxy( "ALLeds", self.ipadress, 9559 ) 
+        self.ledProxy = ALProxy( "ALLeds", self.ipadress, 9559 )
+        self.redBallProxy = ALProxy( "ALRedBallTracker", self.ipadress, 9559 )
