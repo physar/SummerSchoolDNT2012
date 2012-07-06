@@ -26,8 +26,11 @@ class tools_v1():
     def cSubscribe(self, resolution=1):
         """ Subscribe to the camera feed. """
         self.cUnsubscribe()
+        # choose camera (0=top, 1=bottom)
+        self.globals.vidProxy.setParam(18, 1)
         # subscribe(gvmName, resolution={0,1,2}, colorSpace={0,9,10,rgb=11,hsy=12,bgr=13}, fps={5,10,15,30}
         self.globals.vidProxy.subscribe("python_GVM", resolution, 13, 30)
+        
        
        
     # get snapshot from camera
