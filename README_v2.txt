@@ -66,3 +66,29 @@ user defined program.
 
 Just as with 'normal' modules, the class-name of the main module should equal its file-name.
 ----------------------
+
+
+EXTRA NOTES
+----------------------
+Each module is only included once, which has some influence on the behaviour of the system:
+
+Lets assume that there are two modules, called "foo1" and "foo2".
+Both modules are dependend on module "bar" (dependency is set by 'setDependencies(modules)').
+If "foo1" calls "bar" and adjusts some values in the module, these values also change for "foo2":
+
+    bar.data = 'data1'
+    
+    foo1 calls 'bar.getData()'
+            --> return is "data1"
+    foo2 calls 'bar.getData()'
+            --> return is "data1"
+            
+    foo2 calls 'bar.setData("data2")
+
+    foo1 calls 'bar.getData()'
+            --> return is "data2"
+    foo2 calls 'bar.getData()'
+            --> return is "data2"   
+
+With other words: each dependencie shares the exact same reference to a module.
+----------------------
