@@ -17,7 +17,7 @@ VERBOSE = 1
 #######
 
 #main module:   connects all modules to each other
-moduledict["main"]          = ["main", "main"]
+moduledict["main"]          = ["main", "main_v2"]
 #tools module:  contains some pre-defined tools which can be used
 moduledict["tools"]         = [1, "tools_v1"]
 #motion module: contains pre-defined motion patterns
@@ -38,7 +38,7 @@ moduledict["globals"]        = [1, "globals"]
 #[Day1] behavioir module:  handles reactive behaviour
 moduledict["behaviour"]      = [1, "behavior_v1"]
 #[Day2] vision module:     interacts with 'blobs'
-moduledict["vision"]        = [0, "vision_v1"]
+moduledict["vision"]        = [1, "vision_v2"]
 #[Day3] pathplanning:      map handling and A*
 moduledict["pathplanning"]  = [0, "pathplanning_v1"]
 #[Day4] localization:      implementation of gridlocalization
