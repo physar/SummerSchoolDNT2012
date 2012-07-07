@@ -14,7 +14,7 @@ To start the system and run your own code, run 'config.py'
 
 CONFIG.PY
 ----------------------
-Contains dictionairy of all modules.
+Contains a dictionairy of all modules.
 
 A module is loaded using the following syntax:
     >> moduledict["<module-system-reference-name>"] = [<load>, "<class-name-of-module>"]
