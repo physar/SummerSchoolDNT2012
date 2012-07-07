@@ -1,23 +1,33 @@
-\documentclass[dutch, a4paper]{article}
+\documentclass[a4paper]{article}
 
+\usepackage{hyperref}
+
+\title{\textbf{Robotics Summerschool Juli 2012} \\ Introductie opdrachten Dag 1}
+\author{Dutch Nao Team - \url{http://dutchnaoteam.nl}}
+\date{}
 
 \begin{document}
+\maketitle
+
+\section{Introductie}
+Welkom bij de Summerschool Robotics.
+
+Download de code van .....
+Unzip het 
+
+blabla
+
+veel plezier!
+
+
 \tableofcontents
 
 \newpage
 
-\section{Introductie}
-Welkom bij de summerschool
-
-Download de code van .....
-Unzip het 
-\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-
 
 \section{Opdrachten}
 
-\subsection{Python DNT framework Hello World}
+\subsection{intro: Python DNT framework Hello World}
 Komende dagen zul je gaan werken binnen een framework, bestaande uit verschillende modules. Om hier goed gebruik van te kunnen maken is het belangrijk dat je de bijgevoegde readme leest (zie appendix) en de volgende drie dingen en hun functies kent:
 \begin{itemize}
 \item config.py - start de code
@@ -159,35 +169,59 @@ def start():
 \\\\
 Sla alle code op en run opnieuw \textit{config.py}.
 
-\subsection{Lopen, Vallen en Opstaan}
-\indent \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\subsection{intro: Lopen, Vallen en Opstaan}
+In de map \textit{lib} in \textit{modules} staan enkele modules gedefineerd die je kan gebruiken gedurende deze summerschool.
+Voor de volgende opdracht heb je de module \textit{motion\_v1.py} nodig.
 
+\subsubsection{De motion-module}
+Deze module verwacht de proxies motProxy en posProxy in de globals-module. Als eerste moet dus de \textit{globals} module worden uitgebreid.
+Voeg aan de \textit{setProxies(self)} functie de volgende code toe:
 
+\noindent \line(1,0){100}
+\begin{verbatim}
+self.motProxy = ALProxy("ALMotion", self.ipadress, 9559)
+self.posProxy = ALProxy("ALRobotPose", self.ipadress, 9559)
+\end{verbatim}
+\noindent \line(1,0){100}
+\\\\
+De variable \textit{motProxy} zorgt voor een verbinding met de motoren, zodat de robot kan worden aangestuurd. \textit{posProxy} wordt gebruikt om de robot pose (de stand van de motoren) uit te lezen. 
 
+Naast het aanpassen van de \textit{globals}-module, moet ook \textit{config.py} worden geupdate en de main-module moet de motion-module kunnen inladen.
+In de main-module, nadat de proxies zijn geladen, moet de \textit{init(self)} functie van de motion-module worden aangeroepen. Deze functie zorgt ervoor dat de juiste parameters voor bewegingen worden geladen.
 
+Voeg bovenstaande functionaliteit toe aan je code en test het daarna. Zorg ervoor dat je alle errors oplost voordat je verder gaat! (waarschuwingen zijn geen probleem). De code moet aangeven dat het framework goed is geladen/afgesloten.
 
+\subsubsection{Behaviours}
+Bekijk nu eens alle functies die in de motion-module staan, zodat je een globaal idee hebt wat allemaal kan.
 
+Voordat de robot kan lopen moet deze opstaan. Dit kan gedaan worden met de functie \textit{standUp(self)}.
+Deze functie test zelf als de robot is gevallen, als dat het geval is laat het de robot opstaan en anders doet het niks.
+Om te lopen zijn de functies \textit{walkTo(x, y, angle)} en \textit{setTargetVelocity(x, y, angle, frequency)} beschikbaar.
+Met de eerste functie loopt de robot de opgegeven afstand, terwijl bij de tweede optie de robot een richting oploopt, en blijft oplopen.
 
-\subsection{Loop-parameters}
-\indent \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+Maak een map \textit{dag1} in \textit{modules} aan en plaats daarin een module genaamd \textit{behaviour}. Deze module zal all `gedrags-code' code krijgen voor de komende dagen.
+Registeer vervolgende deze module in \textit{config.py} en pas de main-module aan zodat functies uit de \textit{behaviour} module kunnen worden aangeroepen. Zorg er ook voor dat 
+de \textit{behaviour} module de juiste dependencies heeft: hij is afhankelijk van zowel de \textit{globals} als de motion-module. Test vervolgens of je hele systeem nog werkt, en fix eventuele errors.
 
+Als de code werkt zonder errors, dan kunnen we de robot eindelijk laten lopen.
 
+\subsubsection{Lopen, lopen en lopen}
+Maak, doormiddel van onderzoek hoe de loop-functies werken, nu volgende functies die het volgende doen:
+\begin{itemize}
+\item Loop een vierkant: 1 meter naar voren, 1 meter naar links, 1 meter naar achteren en 1 meter naar rechts
+\item Loop een vierkant: 1 meter naar voren, draai 90 graden, loop naar voren, et cetera.
+\item Loop een rondje van ca 1 meter doorsnee.
+\end{itemize}
 
+Extra noties en tips:
+\begin{itemize}
+\item Als de robot valt tijdens het lopen, moet deze opstaan en het figuur afmaken.
+\item De main-module moet de grote lijnen uitvoeren: opstaan indien gevallen, lopen, controleren als de robot klaar is.
+\item Tip: maak voor elk figuur een functie in de behaviour module, zodat je makkelijk tussen functies kan wisselen om te testen.
+\item Tip: zoek eerst uit hoe de loop-functies werken en hoe ze aan te roepen zijn. Test vooral veel!
+\item Tip: de motoren van de robot raken snel oververhit, gebruik \textit{kill()} uit de motion-module om de motoren uit te zetten. \\ !!-PASOP-!!: zorg ervoor dat de robot ligt als je dit doet, anders valt hij om en kan hij stuk gaan.
+\item Tip: Hoe exact kun je lopen?
+\end{itemize}
 
-
-
-
-
-
-
-
-\subsection{Tracking}
-\indent \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-
-\subsection{\indent \indent}
-\indent \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-
-\section{appendix}
+Geef aan als je hiermee klaar bent, dan zullen wij je de volgende opdracht geven, mits de demostratie werkt.
 \end{document}
