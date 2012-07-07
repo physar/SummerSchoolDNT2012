@@ -22,7 +22,7 @@ A module is loaded using the following syntax:
 
 A special module is the main module. This module is the main file of your program.
 Loading a main module is done using to following syntax:
-    >> moduledict["main"]                           = ["main", "<class-name-of-module>"]
+    >> moduledict["main"]                           = "<class-name-of-module>"
 ----------------------
 
 
