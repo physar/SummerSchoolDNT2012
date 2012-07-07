@@ -56,7 +56,11 @@ class main_v2():
             if self.motion.standUp():
                 finished = True
                 print 'Fallen'
-                break
+                
+            if ((self.globals.memProxy.getData("LeftBumperPressed", 0) != 0.0) or \
+                (self.globals.memProxy.getData("RightBumperPressed", 0) != 0.0)):
+                print "Stop hitting the wall"
+                self.motion.walkTo(-0.4,0,0)
             #check is robot is fallen
             #state = self.motion.getState()
             #if (state == "fallen"):
@@ -77,18 +81,32 @@ class main_v2():
             # = 'None' if no observation is found
             # = [signatue, distance, theta] if an observation is found
             #   - signature = id of observed beacon
+            #       0= nothing , 1 = left , 2 = right ,3 = finished
             #   - distance = distance towards beacon
             #   - theta = angle towards beacon
             
             # pathplanning or reactive behavior?
             if observation != None:
-                signatue, distance, theta = observation
-                if distance == 0:
-                    print 'I FOUND THE SPOT'
+                signature, distance, theta = observation
+                #at goal, when 0 dist and theta
+                if (distance == 0 and signature == 3):
+                    print 'I AM FINISHED... FREEDOM!!!'
                     finished = True
-                    break
+                if (distance == 0 and signature == 2):
+                    self.motion.walkTo(0,0,-1.3)
+                    self.motion.walkTo(0.05,0,0)
+                if (distance == 0 and signature == 1):
+                    self.motion.walkTo(0,0,1.25)
+                    self.motion.walkTo(0.05,0,0)
+                    
+                    
+                #found something walk in that direction
+                if distance == 0 and theta != 0:
+                    direction = self.behaviour.calcDirection(observation)
+                    [x, y, theta] = direction
+                    self.motion.walkTo(0.001,0,theta)
                 else:
-                    #if (self.tools.reactiveBeaconObserved(observation) != "path"):
+                #if (self.tools.reactiveBeaconObserved(observation) != "path"):
                     #Day 1: simple reactive behaviour
                     direction = self.behaviour.calcDirection(observation)
                     #finished = self.behaviour.isFinished()
@@ -118,7 +136,7 @@ class main_v2():
                     [x,y,theta ] = direction
                     self.motion.walkTo(x,y, theta)
             else:
-                self.motion.walkTo(0.05,0,0)
+                self.motion.walkTo(0.1,0,0)
             count +=1
     
             

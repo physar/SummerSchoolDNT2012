@@ -38,7 +38,7 @@ moduledict["globals"]        = [1, "globals"]
 #[Day1] behavioir module:  handles reactive behaviour
 moduledict["behaviour"]      = [1, "behavior_v1"]
 #[Day2] vision module:     interacts with 'blobs'
-moduledict["vision"]        = [1, "vision_v2"]
+moduledict["vision"]        = [1, "vision_v3"]
 #[Day3] pathplanning:      map handling and A*
 moduledict["pathplanning"]  = [0, "pathplanning_v1"]
 #[Day4] localization:      implementation of gridlocalization
