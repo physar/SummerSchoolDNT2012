@@ -1,6 +1,7 @@
 import cv
 from naoqi import ALProxy
 import math
+import Image
 
 class tools_v1():    
     globals = None
@@ -26,11 +27,9 @@ class tools_v1():
     def cSubscribe(self, resolution=1):
         """ Subscribe to the camera feed. """
         self.cUnsubscribe()
-        # choose camera (0=top, 1=bottom)
-        self.globals.vidProxy.setParam(18, 1)
+        self.globals.vidProxy.setParam(18,1)
         # subscribe(gvmName, resolution={0,1,2}, colorSpace={0,9,10,rgb=11,hsy=12,bgr=13}, fps={5,10,15,30}
-        self.globals.vidProxy.subscribe("python_GVM", resolution, 13, 30)
-        
+        self.globals.vidProxy.subscribe("python_GVM", resolution, 11, 30)
        
        
     # get snapshot from camera
@@ -49,10 +48,11 @@ class tools_v1():
         # shot[0]=width, shot[1]=height, shot[6]=image-data
         shot = self.globals.vidProxy.getImageRemote("python_GVM")
         size = (shot[0], shot[1])
+        picture = Image.frombuffer("RGB", size, shot[6], "raw", "BGR", 0, 1)
         image = cv.CreateImageHeader(size, cv.IPL_DEPTH_8U, 3)     
-        cv.SetData(image, shot[6], shot[0]*3)
+        cv.SetData(image,picture.tostring(), picture.size[0]*3)
         image = self.convertColourSpace(image, cv.CV_BGR2HSV)
-        
+        #cv.SaveImage('test.png', image)
         return (image, (camPos, headAngles))
        
     def saveImage(self, img, name):
@@ -94,6 +94,6 @@ class tools_v1():
     
     #determine kind what kind of beacon is observed (pathplan/reactive/QR?)
     def reactiveBeaconObserved(self, observation):
-        pass
+        return None
     #RETURN:
     # - 'reactive', 'path', 'QR'
