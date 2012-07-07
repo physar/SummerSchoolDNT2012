@@ -1,9 +1,12 @@
-FRAMEWORK USAGE
+FRAMEWORK USAGE README v2.0 - 7 july 2012
+Hessel van der Molen - hmolen.science@gmail.com
 
 WHAT IT DOES:
 ----------------------
 The presented framework is able to load multiple modules
-It consists of a simple config-file in which modules are registrated and loaded
+It consists of a simple config-file in which modules are registrated and loaded.
+Modules have to be stored in the 'modules' folder, found in the same directory as this readme.
+Since the framework checks all folders in the modules folder, modules can be placed in any subdirection.
 
 To start the system and run your own code, run 'config.py'
 ----------------------
@@ -25,14 +28,15 @@ Loading a main module is done using to following syntax:
 
 MODULE
 ----------------------
-A module is a file in which a single class is defined. The name of the class should be equal to the name of the file.
-The specified module should atleast contain a function called 'setDependencies(modules)'
+A module is a file in which a single class is defined. 
+The name of the class should be equal to the name of the file.
 
+The specified module should contain atleast a function called 'setDependencies(modules)'
 This function is used to import other loaded modules in the current module. 
 Loading other modules in this function is done using one of the following commands:
 
     #return list with the names loaded modules (strings)
-    >> modules.getModules()
+    >> modulelist = modules.getModules()
 
     #return pointer to the main module
     >> modules.getMainModule()
@@ -59,4 +63,6 @@ contain a function called 'start()'.
 
 After all modules are loaded by the framework, this function is called. The 'start()' function starts the
 user defined program.
+
+Just as with 'normal' modules, the class-name of the main module should equal its file-name.
 ----------------------
