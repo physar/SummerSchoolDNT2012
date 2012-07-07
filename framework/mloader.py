@@ -15,7 +15,7 @@ class mLoader():
         for i in moduledict:
             if (i == "main"):   #-> mainmodule
                 #import module
-                mainModName = moduledict[i][0]
+                mainModName = moduledict[i]
                 module = self.importModule(mainModName)
                 #test start-function
                 if not hasattr(module, "start"):
@@ -24,8 +24,8 @@ class mLoader():
                 else:
                     #put module in 'mainmodule' and 'moduledict'
                     self.__mainmodule = module
-                    self.__moduledict[moduledict[i][1]] = module
-                    if (VERBOSE): print "Main-Module loaded: '" + str(mainModName) + "' as '" + str(moduledict[i][1]) + "'."
+                    self.__moduledict["main"] = module
+                    if (VERBOSE): print "Main-Module loaded: '" + str(mainModName) + "' as 'main'."
             elif moduledict[i][0] == 1:
                 #import module
                 modName = moduledict[i][1]
