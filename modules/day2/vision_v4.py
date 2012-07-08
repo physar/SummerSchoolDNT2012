@@ -1,6 +1,6 @@
 import cv, cv2, math, numpy
 
-class vision_v3():    
+class vision_v4():    
     globals = None
 
     def setDependencies(self, modules):
@@ -17,20 +17,12 @@ class vision_v3():
         blobsP = self.findCircle(filtImageP)
         blobsB = self.findCircle(filtImageB)
         blobsO = self.findCircle(filtImageO)
+
         
-        blobsFound = 0
-        blobsList = []
+        blobsFound , blobsList = self.appendBlobs( blobsP, blobsB, blobsO)
+
         
-        if blobsP != None:
-            blobsList.append(blobsP)
-            blobsFound +=1 
-        if blobsB != None:
-            blobsList.append(blobsB)
-            blobsFound +=1
-        if blobsO != None:
-            blobsList.append(blobsO)
-            blobsFound +=1 
-        print 'BlobsFound: ' + str(blobsFound)
+        
         #When nothing found
         if blobsFound == 0:           
             cv.SaveImage('None.png', image)
@@ -44,9 +36,9 @@ class vision_v3():
             print 'px,py coord Orange Blob: ' + str(blobsO)
             
             #Diffrence in distance off pixels between blobs
-            diff1 = self.findDiffrence(blobsP,blobsB)
-            diff2 = self.findDiffrence(blobsP,blobsO)
-            diff3 = self.findDiffrence(blobsO,blobsB)
+            diff1 = self.findDiffrence(blobsP[0],blobsB[0])
+            diff2 = self.findDiffrence(blobsP[0],blobsO[0])
+            diff3 = self.findDiffrence(blobsO[0],blobsB[0])
             
             avrage = (diff1 +diff2 + diff3) /3
             
@@ -59,7 +51,7 @@ class vision_v3():
                 print 'This was my distance to the goal: ' + str(distance) + ' !!IM DONE!!'
                 cv.SaveImage('goal.png', image)
                 #return signal(links, rechts), distance, theta
-                signature = self.findSignature(blobsO, blobsB, blobsP)
+                signature = self.findSignature(blobsO[0], blobsB[0], blobsP[0])
                 return signature, 0, 0
             else:
                 xAverage, yAverage = self.findAvargePoint(blobsList)
@@ -85,7 +77,7 @@ class vision_v3():
             else:
                 
                 #####MOET KALIBREREN!!!!!!
-                realDistance = distance *0.01
+                realDistance = distance *0.005
                 print 'Distance to walk to the goal: ' + str(realDistance)
                 print 'DEBUG, angle: ' + str(angle)
                 return 0, realDistance, angle
@@ -107,7 +99,7 @@ class vision_v3():
             if blobsB != None:
                 print 'Blue was Found!!'
             print 'DEBUG, angle: ' + str(angle)
-            return 1, 0.01, angle
+            return 1, 0.03, angle
     
         
     #RETURN:
@@ -116,6 +108,24 @@ class vision_v3():
     #   - signature = id of observed beacon
     #   - distance = distance towards beacon
     #   - theta = angle towards beacon
+    
+    #Put all the found blobs in a list
+    def appendBlobs(self, blobsP, blobsB, blobsO):
+    
+        blobsFound = 0
+        blobsList = []
+        if blobsP != None:
+            #now only the 1st found circle in a pic will be used
+            blobsList.append(blobsP[0])
+            blobsFound +=1 
+        if blobsB != None:
+            blobsList.append(blobsB[0])
+            blobsFound +=1
+        if blobsO != None:
+            blobsList.append(blobsO[0])
+            blobsFound +=1 
+        print 'BlobsFound: ' + str(blobsFound)
+        return blobsFound , blobsList
     
     #signature: 1 = left, 2 = right , 3 = done. 0 = nothing
     def findSignature(self, orange, blue, pink):
@@ -126,15 +136,15 @@ class vision_v3():
         print blue
         print pink
       
-        if (orange[0][0] < xAverage and pink[0][0] > xAverage and blue[0][1] < yAverage):
+        if (orange[0] < xAverage and pink[0] > xAverage and blue[1] < yAverage):
             print 'Signature: ' +str(1)
             signature = 1
             return signature
-        if (blue[0][0] < xAverage and orange[0][0] > xAverage and pink[0][1] < yAverage):
+        if (blue[0] < xAverage and orange[0] > xAverage and pink[1] < yAverage):
             print 'Signature: ' +str(2)
             signature = 2
             return signature
-        if (pink[0][0] < xAverage and blue[0][0] > xAverage and orange[0][1] < yAverage):
+        if (pink[0] < xAverage and blue[0] > xAverage and orange[1] < yAverage):
             print 'Signature: ' +str(3)
             signature = 3
             return signature
@@ -154,9 +164,10 @@ class vision_v3():
     
     #find diffrence between pixels in Image of 2 blobs (nothing to do with real world)
     def findDiffrence(self,blobYellow, blobBlue):
-        [p1], [p2] = blobYellow, blobBlue
-        [x1,y1] = p1
-        [x2,y2] = p2
+        print 'blobYellow, blobBlue'
+        print blobYellow, blobBlue
+        [x1,y1], [x2,y2] = blobYellow, blobBlue
+        
         diffPOW = math.pow(abs(y2 - y1),2)  + math.pow(abs(x1 -x2),2)
         diff = math.sqrt(diffPOW)
         return diff
@@ -177,7 +188,7 @@ class vision_v3():
         for i in xrange(len(blobsFound)):
             #print 'Debug, blobsList: ' + str(blobsFound[i])
             Coordinates = blobsFound[i]
-            [[x,y]] = Coordinates
+            [x,y] = Coordinates
             xTotal  += x
             yTotal += y
         xAvarge , yAvarge = (xTotal / len(blobsFound)) , (yTotal / len(blobsFound))
