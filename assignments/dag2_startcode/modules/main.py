@@ -11,4 +11,4 @@ class main:
         self.tools.cSubscribe()
         
         img = self.tools.getSnapshot()
-        cv.SaveImage("test.png", img[0])
+        self.tools.SaveImage("test.png", img[0])

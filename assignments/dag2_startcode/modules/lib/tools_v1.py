@@ -51,6 +51,9 @@ class tools_v1():
         
         return (hsvImage, (camPos, headAngles))
     
+    def SaveImage(self, name, img):
+        cv.SaveImage(name, img)
+    
     def minimizedAngle( angle ):
         """ maps an angle to the interval [pi, pi] """
         if angle > math.pi:
