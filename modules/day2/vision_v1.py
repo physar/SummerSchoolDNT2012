@@ -2,9 +2,10 @@ import cv2
 import cv
 
 class vision_v1():    
+    globals = None
 
     def setDependencies(self, modules):
-        pass
+        self.globals = modules.getModule("globals")
     
     # process image to detect color blobs
     def getBeaconObservation(self, img):

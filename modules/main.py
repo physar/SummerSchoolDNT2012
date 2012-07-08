@@ -1,12 +1,14 @@
 class main():
+    globals         = None
     tools           = None
     motion          = None
     behaviour       = None
     vision          = None
     pathplanning    = None
     localization    = None
-    
+
     def setDependencies(self, modules):
+        self.globals        = modules.getModule("globals")
         self.tools          = modules.getModule("tools")
         self.motion         = modules.getModule("motion")
         self.behaviour      = modules.getModule("behaviour")
@@ -15,10 +17,34 @@ class main():
         self.localization   = modules.getModuleNone("localization")
         
     def start(self):
-        finished = false
+        #ipadress of NAO
+        self.globals.setIPadress("192.168.1.35")
+        self.globals.createProxies()
+
+        #init motions
+        self.motion.init()
+        
+        #subscribe to camera, to recieve images
+        self.tools.cSubscribe()
+        
+        #test image
+        imgData = self.tools.getSnapshot()
+        img = imgData[0]
+        self.tools.saveImage(img, "hsvImage.png")
+        img = self.tools.convertColourSpace(img, 54) #HSV2BGR
+        self.tools.saveImage(img, "test.png")
+        
+        self.motion.stiff()
+        self.motion.normalPose()
+        
+        self.behaviour.walk([0,0.2,0])
+        
+        exit()
+        
+        finished = False
         map = tools.loadMap()
         
-        while (finished == false):
+        while (finished == False):
         
             #check is robot is fallen
             state = self.motion.getState()
@@ -32,7 +58,7 @@ class main():
             if (self.vision != None):
                 #Day 2: Blob recognition
                 observation = self.vision.getBeaconObservation(img)
-            else
+            else:
                 #QR code recognition
                 observation = self.tools.getBeaconObservation(img)
              
@@ -53,7 +79,7 @@ class main():
                 if (self.localization != None):
                     #Day 4: Grid localization
                     pose = self.localization.updatePose(observation, map)
-                else
+                else:
                     #build in localization
                     pose = self.tools.updatePose(observation, map)        
                 #pose: [x,y,theta]
@@ -70,4 +96,5 @@ class main():
             
             # walk into direction
             motion.walkTo(direction)
+    
             

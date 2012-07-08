@@ -17,7 +17,7 @@ VERBOSE = 1
 #######
 
 #main module:   connects all modules to each other
-moduledict["main"]          = "main_v2"
+moduledict["main"]          = "main_vision"
 #tools module:  contains some pre-defined tools which can be used
 moduledict["tools"]         = [1, "tools_v1"]
 #motion module: contains pre-defined motion patterns
@@ -35,14 +35,6 @@ moduledict["globals"]        = [1, "globals"]
 # - load(True/False)    load (1) or do not load (0) module in framework
 # - <filename>          name of file/class (without.py)
 
-#[Day1] behavioir module:  handles reactive behaviour
-moduledict["behaviour"]      = [1, "behavior_v1"]
-#[Day2] vision module:     interacts with 'blobs'
-moduledict["vision"]        = [1, "vision_v4"]
-#[Day3] pathplanning:      map handling and A*
-moduledict["pathplanning"]  = [0, "pathplanning_v1"]
-#[Day4] localization:      implementation of gridlocalization
-moduledict["localization"]  = [0, "localization_v1"]
 
 ###########################
 # start & run framework

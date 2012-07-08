@@ -1,0 +1,213 @@
+\documentclass[a4paper]{article}
+
+\usepackage{hyperref}
+
+\title{\textbf{Robotics Summerschool Juli 2012} \\ Introductie opdrachten Dag 1}
+\author{Dutch Nao Team - \url{http://dutchnaoteam.nl}}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Introductie}
+Welkom bij de Summerschool Robotics.
+
+Download de code van .....
+Unzip het 
+
+blabla
+
+veel plezier!
+
+
+\tableofcontents
+
+\newpage
+
+
+\section{Opdrachten}
+
+\subsection{Python DNT framework Hello World}
+Komende dagen zul je gaan werken binnen een framework, bestaande uit verschillende modules. Om hier goed gebruik van te kunnen maken is het belangrijk dat je de bijgevoegde readme leest (zie appendix) en de volgende drie dingen en hun functies kent:
+\begin{itemize}
+\item config.py - start de code
+\item module - bevat minimaal de functie \textit{setDependencies(self, modules)}
+\item main-module - bevat minimaal de functies \textit{setDependencies(self, modules)} en \textit{start(self)}
+\end{itemize}
+
+\subsubsection{Een Main-Module aanmaken}
+Open een nieuw document in Notepad++, noem het \textit{main.py} en sla het op in de map \textit{modules} van het geleverde framework. 
+Zoals beschreven in de readme, begint een module met een klasse-naam gelijk aan zijn bestandsnaam. Een main-file bevat daarnaast ook minimaal 2 functies: \textit{setDependencies} en \textit{start}.
+Omdat de functies op dit moment nog geen inhoud hebben, moet je het commando \textit{pass} onder de functie-declaratie geven. Het bestand zou er nu als volgt uit moeten zien:
+
+\noindent \line(1,0){100}
+\begin{verbatim}
+class main:
+    def setDependencies(self, modules):
+        pass
+
+    def start(self):
+        pass
+\end{verbatim}
+\noindent \line(1,0){100}
+\\\\
+Vergeet niet het bestand op te slaan!
+
+\subsubsection{Een module voor globale variabelen}
+Binnen het framework zullen meerdere variabelen straks gedeeld worden door meerdere modules. Daarom is er een module nodig die deze variabelen en functies bevat.
+
+Open een nieuw document in Notepad++ en noem het \textit{globals.py}, sla het op in de map \textit{modules} en geef het de juiste klasse-naam en functie(s). 
+
+Een robot wordt aangeroepen aan de hand van zijn ipadress. Start je Nao op en achterhaal zijn ipadress op door op zijn chest-button te drukken. Dit ipadress moet als string worden genoteerd in de globals-module: \textit{ ipadress = "$<$ipadress-van-je-nao$>$"}. De variabele moet worden gezet in de globale scoop van de module, direct onder de definitie van de klasse.
+
+Binnen de Naoqi (de software waar de Nao op draait) worden naoqi-modules aangeroepen via een proxy: ALProxy (\textit{from naoqi import ALProxy}). Om slechts 1 keer verbinding te maken met alle proxies defineren we een functie, \textit{setProxies(self)}, die dit doet. Deze functie zal straks door de main-module worden aangeroepen.
+
+De Nao beschikt over een TextToSpeech-module, deze is aan te roepen doormiddel van: \textit{ALProxy(``ALTextToSpeech", self.ipadress, 9559)} \footnote{Je zult je wellicht afvragen waarom \textit{self} aan de globale variabele en aan functies is gekoppeld. Heel kort gezegt refereert het commando \textit{self} naar zijn eigen klasse. Python weet hiermee dat de informatie die het zoekt in de scoop van de eigen klasse zit.}.en zet tekst om in spraak. Andere modules in ons framework moeten deze naoqi-module kunnen aanroepen, dus slaan we de zojuist gemaakte referentie op in de variabele \textit{self.speechProxy}.
+
+Je code zou er nu als volgt uit moeten zien:
+
+\noindent \line(1,0){100}
+\begin{verbatim}
+from naoqi import ALProxy
+class globals:
+    ipadress = "<ipadress-van-je-nao>"
+
+    def setDependencies(self, modules):
+        pass
+
+    def setProxies(self):
+        self.speechProxy = ALProxy("ALTextToSpeech", self.ipadress, 9559)
+\end{verbatim}
+\noindent \line(1,0){100}
+
+\subsubsection{modules registreren in \textit{config.py}}
+De zojuist gemaakte modules moeten nu nog worden geregistreerd in het framework. Hiervoor is er een bestand config.py, open dit in Notepad++.
+
+Als eerste moet de main-module worden geregistreerd. Zoals in de readme beschreven, wordt dit gedaan door:
+ \textit{moduledict[``main"] = ``$<$class-name-of-module$>$" }. 
+Omdat wij onze main-module \textit{main} hebben genoemd, ziet de registratie er uit als: \textit{moduledict[``main"] = ``main"}.
+Registratie wordt gedaan vanaf regel 17 en voor het stuk dat het framework importeert en uitvoert.
+
+Ook de globals-module moet worden geregistreerd. Om overzicht te houden is het raadzaam om de referentie naam \textit{``globals"} te noemen. Aan de hand van deze naam kunnen straks andere modules globals aanroepen en opvragen. De module naam is ook ``globals", daarom ziet deze registratie er als volgt uit: \textit{moduledict[``globals"] = [1, ``globals"]}
+
+\newpage
+
+\textit{config.py} zou er nu ongeveer zo uit moeten zien:
+
+\noindent \line(1,0){100}
+\begin{verbatim}
+# @file config.py
+# @func module definitions for framework. 
+#       Is used to register, define & load modules 
+#       Starts the main-framework
+# @auth Hessel van der Molen
+#       hmolen.science@gmail.com
+# @date 4 may 2012
+
+#dictionary for module
+moduledict = {}
+#show frameworks print's (1=show, 0=do not show)
+VERBOSE = 1
+
+####
+## Register modules:
+#######
+
+moduledict["main"] = "main"
+moduledict["globals"] = [1, "globals"]
+
+###########################
+# start & run framework
+###########################
+from framework import mframework
+mframework.startUpFramework(moduledict, VERBOSE)
+\end{verbatim}
+\noindent \line(1,0){100}
+
+\subsubsection{Het runnen van de code}
+Het framework (en onze code) is nu klaar om te runnen. Dit wordt gedaan door het programma \textit{Command Prompt} (All Programs $>$ Accessories) te openen. 
+Ga nu behulp van de commando's ``cd"  en ``dir" naar de map waar \textit{config.py} staat.
+Door \textit{python config.py} te typen wordt de code gestart.
+
+Start de code en bekijk wat er gebeurd.
+
+Als het goed is, sluit het systeem (na enkele prints te hebben gedaan) netjes af. Dit klopt, aangezien onze main nog geen aanroep maakt of code uitvoert.
+
+Om het Hello World-voorbeeld af te maken moeten we weer terug gaan naar onze main-module.
+
+De main-module is afhankelijk (dependent) van de globals. Daarom moet de \textit{globals}-module via \textit{setDependencies(self, modules)} worden aangeroepen:
+
+\noindent \line(1,0){100}
+\begin{verbatim}
+def setDependencies(self, modules):
+    self.globals = modules.getModule("globals")
+\end{verbatim}
+\noindent \line(1,0){100}
+\\\\
+Via de variable \textit{self.globals} hebben we in de main-module toegang tot alle globale data.
+
+Om iets met de robot te kunnen doen moeten de proxies worden gezet met \textit{self.globals.setProxies()} nadat onze code is opgestart (na \textit{start(self)} is aangeroepen door het framework).
+Wanneer de proxies zijn aangeroepen kunnen we gebruik maken van de variabele \textit{speechProxy} uit \textit{globals}.
+Met behulp van het commando \textit{say(``Text...")} kan de Nao text uitspreken. In ons systeem ziet dit er als volgt uit:
+
+\noindent \line(1,0){100}
+\begin{verbatim}
+def start():
+    self.globals.setProxies()
+    self.globals.speechProxy.say("Hello World")
+\end{verbatim}
+\noindent \line(1,0){100}
+\\\\
+Sla alle code op en run opnieuw \textit{config.py}.
+
+\subsection{Lopen, Vallen en Opstaan}
+In de map \textit{lib} in \textit{modules} staan enkele modules gedefineerd die je kan gebruiken gedurende deze summerschool.
+Voor de volgende opdracht heb je de module \textit{motion\_v1.py} nodig.
+
+\subsubsection{De motion-module}
+Deze module verwacht de proxies motProxy en posProxy in de globals-module. Als eerste moet dus de \textit{globals} module worden uitgebreid.
+Voeg aan de \textit{setProxies(self)} functie de volgende code toe:
+
+\noindent \line(1,0){100}
+\begin{verbatim}
+self.motProxy = ALProxy("ALMotion", self.ipadress, 9559)
+self.posProxy = ALProxy("ALRobotPose", self.ipadress, 9559)
+\end{verbatim}
+\noindent \line(1,0){100}
+\\\\
+De variable \textit{motProxy} zorgt voor een verbinding met de motoren, zodat de robot kan worden aangestuurd. \textit{posProxy} wordt gebruikt om de robot pose (de stand van de motoren) uit te lezen. 
+
+Naast het aanpassen van de \textit{globals}-module, moet ook \textit{config.py} worden geupdate en de main-module moet de motion-module kunnen inladen.
+In de main-module, nadat de proxies zijn geladen, moet de \textit{init(self)} functie van de motion-module worden aangeroepen. Deze functie zorgt ervoor dat de juiste parameters voor bewegingen worden geladen.
+
+Voeg bovenstaande functionaliteit toe aan je code en test het daarna. Zorg ervoor dat je alle errors oplost voordat je verder gaat! (waarschuwingen zijn geen probleem). De code moet aangeven dat het framework goed is geladen/afgesloten.
+
+\subsubsection{Lopen, lopen en lopen...}
+Bekijk nu eens alle functies die in de motion-module staan, zodat je een globaal idee hebt wat allemaal kan.
+
+Voordat de robot kan lopen moet deze opstaan. Dit kan gedaan worden met de functie \textit{standUp(self)}.
+Deze functie test zelf als de robot is gevallen, als dat het geval is laat het de robot opstaan en anders doet het niks.
+Om te lopen zijn de functies \textit{walkTo(x, y, angle)} en \textit{setTargetVelocity(x, y, angle, frequency)} beschikbaar.
+Met de eerste functie loopt de robot de opgegeven afstand, terwijl bij de tweede optie de robot een richting op loopt, en blijft lopen.
+
+Maak, doormiddel van onderzoek hoe de loop-functies werken, nu volgende functies die het volgende doen:
+\begin{itemize}
+\item Loop een vierkant: 1 meter naar voren, 1 meter naar links, 1 meter naar achteren en 1 meter naar rechts
+\item Loop een vierkant: 1 meter naar voren, draai 90 graden, loop naar voren, et cetera.
+\item Loop een rondje van ca 1 meter doorsnee.
+\end{itemize}
+
+Extra noties en tips:
+\begin{itemize}
+\item Als de robot valt tijdens het lopen, moet deze opstaan en het figuur afmaken.
+\item Tip: Zoek eerst uit hoe de loop-functies werken en hoe ze aan te roepen zijn. Test vooral veel!
+\item Tip: Het kan handig zijn om drie verschillende main-modules te maken, elk voor een apart loopje. Met behulp van \textit{config.py} kun je andere main-modules inladen en zo wisselen tussen loopjes.
+\item Tip: Als je meerdere modules gaat maken, is het handig om dit netjes in mappen te plaatsen zodat je overzicht houd.
+\item Tip: De motoren van de robot raken snel oververhit. Door 2 keer snel achter-elkaar op de chest-button te drukken zet je de motoren uit (stifness removed). Een andere (af te raden) optie is om de \textit{kill()}-functie uit de motion-module te gebruiken.
+\\ \textit{!!-PASOP-!!}: Als je de \textit{kill()}-functie gebruikt, zorg er dan voor dat er iemand bij staat of dat hij ligt. Als de robot rechtop staat en de motoren worden uitgezet valt hij om en kan hij kapot gaan.
+\item Tip: Hoe exact kun je lopen?
+\item Tip: Hoewel all nodige motions in de motion module staat, kun je met behulp van de \textit{motProxy} direct motion-behaviours aanroepen uit nao-qi. De documentatie hiervoor kun je vinden door ``Nao reference" op je bureaublad aan te klikken. Daarna ga je naar: ``NAOqi API $>$ ALMotion". 
+\end{itemize}
+
+Geef aan als je hiermee klaar bent, dan zullen wij je de volgende opdracht geven, mits de demostratie werkt.
+\end{document}

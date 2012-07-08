@@ -9,12 +9,6 @@ class tools_v1():
     def setDependencies(self, modules):
         self.globals = modules.getModule("globals")
 
-    # load map of maze from txt file
-    def loadMap(self):
-        pass
-    #RETURN
-    # map representation: double list? dict?
-    
     #unsubscribe from camera
     def cUnsubscribe(self):
         """ Try to unsubscribe from the camera """ 
@@ -30,7 +24,6 @@ class tools_v1():
         self.globals.vidProxy.setParam(18,1)
         # subscribe(gvmName, resolution={0,1,2}, colorSpace={0,9,10,rgb=11,hsy=12,bgr=13}, fps={5,10,15,30}
         self.globals.vidProxy.subscribe("python_GVM", resolution, 11, 30)
-       
        
     # get snapshot from camera
     def getSnapshot(self):
@@ -49,23 +42,14 @@ class tools_v1():
         shot = self.globals.vidProxy.getImageRemote("python_GVM")
         size = (shot[0], shot[1])
         picture = Image.frombuffer("RGB", size, shot[6], "raw", "BGR", 0, 1)
+ 
+        #create a open cv image of the snapshot
         image = cv.CreateImageHeader(size, cv.IPL_DEPTH_8U, 3)     
         cv.SetData(image,picture.tostring(), picture.size[0]*3)
-        cv.SaveImage('orgFile.png', image)
-        image = self.convertColourSpace(image, cv.CV_BGR2HSV)
-        #cv.SaveImage('test.png', image)
-        return (image, (camPos, headAngles))
-       
-    def saveImage(self, img, name):
-        """ save image, using given name. 
-        Note that SaveImage/2 expects the colorspace BGR """ 
-        cv.SaveImage(name, img)
+        hsvImage = cv.CreateImage(size, cv.IPL_DEPTH_8U, 3)
+        cv.CvtColor(image, hsvImage, cv.CV_BGR2HSV)
         
-    # conversion is an int: cv.CV_<scrColorSpace>2<dstColorSpace>
-    def convertColourSpace(self, srcImage, conversion):
-        dstImage = cv.CreateImage(cv.GetSize(srcImage), cv.IPL_DEPTH_8U, 3)
-        cv.CvtColor(srcImage, dstImage, conversion)
-        return dstImage
+        return (hsvImage, (camPos, headAngles))
     
     def minimizedAngle( angle ):
         """ maps an angle to the interval [pi, pi] """
@@ -74,31 +58,3 @@ class tools_v1():
         if angle <= -math.pi:
             angle += 2*math.pi
         return angle
-    
-    
-    
-    
-    
-    # process img, get QR-code data
-    def getBeaconObservation(self, img):
-        pass
-    #RETURN:
-    # = 'None' if no observation is found
-    # = [signatue, distance, theta] if an observation is found
-    #   - signature = id of observed beacon
-    #   - distance = distance towards beacon
-    #   - theta = angle towards beacon
-        
-    #update pose of robot (grid localization)
-    def updatePose(self, observation, map):
-        pass
-    #RETURN:
-    #pose: [x,y,theta]
-    #x/y: position in maze? (0:0, to 3:3? (4x4 maze))
-    #       or in cm? (grid is rougly 88x88cm)
-    
-    #determine kind what kind of beacon is observed (pathplan/reactive/QR?)
-    def reactiveBeaconObserved(self, observation):
-        return None
-    #RETURN:
-    # - 'reactive', 'path', 'QR'
