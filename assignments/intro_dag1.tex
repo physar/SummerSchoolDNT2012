@@ -27,7 +27,7 @@ veel plezier!
 
 \section{Opdrachten}
 
-\subsection{intro: Python DNT framework Hello World}
+\subsection{Python DNT framework Hello World}
 Komende dagen zul je gaan werken binnen een framework, bestaande uit verschillende modules. Om hier goed gebruik van te kunnen maken is het belangrijk dat je de bijgevoegde readme leest (zie appendix) en de volgende drie dingen en hun functies kent:
 \begin{itemize}
 \item config.py - start de code
@@ -58,22 +58,11 @@ Binnen het framework zullen meerdere variabelen straks gedeeld worden door meerd
 
 Open een nieuw document in Notepad++ en noem het \textit{globals.py}, sla het op in de map \textit{modules} en geef het de juiste klasse-naam en functie(s). 
 
-Een robot wordt aangeroepen aan de hand van zijn ipadress. Start je Nao op en achterhaal zijn ipadress op door op zijn chest-button te drukken. Dit ipadress moet als string worden genoteerd in de globals-module:
+Een robot wordt aangeroepen aan de hand van zijn ipadress. Start je Nao op en achterhaal zijn ipadress op door op zijn chest-button te drukken. Dit ipadress moet als string worden genoteerd in de globals-module: \textit{ ipadress = "$<$ipadress-van-je-nao$>$"}. De variabele moet worden gezet in de globale scoop van de module, direct onder de definitie van de klasse.
 
-\noindent \line(1,0){100}
-\begin{verbatim}
-class globals:
-    ipadress = "<ipadress-van-je-nao>"
-
-    def setDependencies(self, modules):
-        pass
-\end{verbatim}
-\noindent \line(1,0){100}
-\\\\
 Binnen de Naoqi (de software waar de Nao op draait) worden naoqi-modules aangeroepen via een proxy: ALProxy (\textit{from naoqi import ALProxy}). Om slechts 1 keer verbinding te maken met alle proxies defineren we een functie, \textit{setProxies(self)}, die dit doet. Deze functie zal straks door de main-module worden aangeroepen.
 
-De Nao beschikt over een TextToSpeech-module, deze is aan te roepen doormiddel van: \textit{ALProxy``ALTextToSpeech", self.ipadress, 9559)}
-en zet tekst om in spraak. Andere modules in ons framework moeten deze naoqi-module kunnen aanroepen, dus slaan we de zojuist gemaakte referentie op in de variabele \textit{self.speechProxy}.
+De Nao beschikt over een TextToSpeech-module, deze is aan te roepen doormiddel van: \textit{ALProxy(``ALTextToSpeech", self.ipadress, 9559)} \footnote{Je zult je wellicht afvragen waarom \textit{self} aan de globale variabele en aan functies is gekoppeld. Heel kort gezegt refereert het commando \textit{self} naar zijn eigen klasse. Python weet hiermee dat de informatie die het zoekt in de scoop van de eigen klasse zit.}.en zet tekst om in spraak. Andere modules in ons framework moeten deze naoqi-module kunnen aanroepen, dus slaan we de zojuist gemaakte referentie op in de variabele \textit{self.speechProxy}.
 
 Je code zou er nu als volgt uit moeten zien:
 
@@ -81,7 +70,7 @@ Je code zou er nu als volgt uit moeten zien:
 \begin{verbatim}
 from naoqi import ALProxy
 class globals:
-    ipadress = "192.168.0.1"
+    ipadress = "<ipadress-van-je-nao>"
 
     def setDependencies(self, modules):
         pass
@@ -100,6 +89,8 @@ Omdat wij onze main-module \textit{main} hebben genoemd, ziet de registratie er 
 Registratie wordt gedaan vanaf regel 17 en voor het stuk dat het framework importeert en uitvoert.
 
 Ook de globals-module moet worden geregistreerd. Om overzicht te houden is het raadzaam om de referentie naam \textit{``globals"} te noemen. Aan de hand van deze naam kunnen straks andere modules globals aanroepen en opvragen. De module naam is ook ``globals", daarom ziet deze registratie er als volgt uit: \textit{moduledict[``globals"] = [1, ``globals"]}
+
+\newpage
 
 \textit{config.py} zou er nu ongeveer zo uit moeten zien:
 
@@ -169,7 +160,7 @@ def start():
 \\\\
 Sla alle code op en run opnieuw \textit{config.py}.
 
-\subsection{intro: Lopen, Vallen en Opstaan}
+\subsection{Lopen, Vallen en Opstaan}
 In de map \textit{lib} in \textit{modules} staan enkele modules gedefineerd die je kan gebruiken gedurende deze summerschool.
 Voor de volgende opdracht heb je de module \textit{motion\_v1.py} nodig.
 
@@ -191,21 +182,14 @@ In de main-module, nadat de proxies zijn geladen, moet de \textit{init(self)} fu
 
 Voeg bovenstaande functionaliteit toe aan je code en test het daarna. Zorg ervoor dat je alle errors oplost voordat je verder gaat! (waarschuwingen zijn geen probleem). De code moet aangeven dat het framework goed is geladen/afgesloten.
 
-\subsubsection{Behaviours}
+\subsubsection{Lopen, lopen en lopen...}
 Bekijk nu eens alle functies die in de motion-module staan, zodat je een globaal idee hebt wat allemaal kan.
 
 Voordat de robot kan lopen moet deze opstaan. Dit kan gedaan worden met de functie \textit{standUp(self)}.
 Deze functie test zelf als de robot is gevallen, als dat het geval is laat het de robot opstaan en anders doet het niks.
 Om te lopen zijn de functies \textit{walkTo(x, y, angle)} en \textit{setTargetVelocity(x, y, angle, frequency)} beschikbaar.
-Met de eerste functie loopt de robot de opgegeven afstand, terwijl bij de tweede optie de robot een richting oploopt, en blijft oplopen.
+Met de eerste functie loopt de robot de opgegeven afstand, terwijl bij de tweede optie de robot een richting op loopt, en blijft lopen.
 
-Maak een map \textit{dag1} in \textit{modules} aan en plaats daarin een module genaamd \textit{behaviour}. Deze module zal all `gedrags-code' code krijgen voor de komende dagen.
-Registeer vervolgende deze module in \textit{config.py} en pas de main-module aan zodat functies uit de \textit{behaviour} module kunnen worden aangeroepen. Zorg er ook voor dat 
-de \textit{behaviour} module de juiste dependencies heeft: hij is afhankelijk van zowel de \textit{globals} als de motion-module. Test vervolgens of je hele systeem nog werkt, en fix eventuele errors.
-
-Als de code werkt zonder errors, dan kunnen we de robot eindelijk laten lopen.
-
-\subsubsection{Lopen, lopen en lopen}
 Maak, doormiddel van onderzoek hoe de loop-functies werken, nu volgende functies die het volgende doen:
 \begin{itemize}
 \item Loop een vierkant: 1 meter naar voren, 1 meter naar links, 1 meter naar achteren en 1 meter naar rechts
@@ -216,11 +200,13 @@ Maak, doormiddel van onderzoek hoe de loop-functies werken, nu volgende functies
 Extra noties en tips:
 \begin{itemize}
 \item Als de robot valt tijdens het lopen, moet deze opstaan en het figuur afmaken.
-\item De main-module moet de grote lijnen uitvoeren: opstaan indien gevallen, lopen, controleren als de robot klaar is.
-\item Tip: maak voor elk figuur een functie in de behaviour module, zodat je makkelijk tussen functies kan wisselen om te testen.
-\item Tip: zoek eerst uit hoe de loop-functies werken en hoe ze aan te roepen zijn. Test vooral veel!
-\item Tip: de motoren van de robot raken snel oververhit, gebruik \textit{kill()} uit de motion-module om de motoren uit te zetten. \\ !!-PASOP-!!: zorg ervoor dat de robot ligt als je dit doet, anders valt hij om en kan hij stuk gaan.
+\item Tip: Zoek eerst uit hoe de loop-functies werken en hoe ze aan te roepen zijn. Test vooral veel!
+\item Tip: Het kan handig zijn om drie verschillende main-modules te maken, elk voor een apart loopje. Met behulp van \textit{config.py} kun je andere main-modules inladen en zo wisselen tussen loopjes.
+\item Tip: Als je meerdere modules gaat maken, is het handig om dit netjes in mappen te plaatsen zodat je overzicht houd.
+\item Tip: De motoren van de robot raken snel oververhit. Door 2 keer snel achter-elkaar op de chest-button te drukken zet je de motoren uit (stifness removed). Een andere (af te raden) optie is om de \textit{kill()}-functie uit de motion-module te gebruiken.
+\\ \textit{!!-PASOP-!!}: Als je de \textit{kill()}-functie gebruikt, zorg er dan voor dat er iemand bij staat of dat hij ligt. Als de robot rechtop staat en de motoren worden uitgezet valt hij om en kan hij kapot gaan.
 \item Tip: Hoe exact kun je lopen?
+\item Tip: Hoewel all nodige motions in de motion module staat, kun je met behulp van de \textit{motProxy} direct motion-behaviours aanroepen uit nao-qi. De documentatie hiervoor kun je vinden door ``Nao reference" op je bureaublad aan te klikken. Daarna ga je naar: ``NAOqi API $>$ ALMotion". 
 \end{itemize}
 
 Geef aan als je hiermee klaar bent, dan zullen wij je de volgende opdracht geven, mits de demostratie werkt.
