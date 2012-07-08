@@ -51,6 +51,7 @@ class tools_v1():
         picture = Image.frombuffer("RGB", size, shot[6], "raw", "BGR", 0, 1)
         image = cv.CreateImageHeader(size, cv.IPL_DEPTH_8U, 3)     
         cv.SetData(image,picture.tostring(), picture.size[0]*3)
+        cv.SaveImage('orgFile.png', image)
         image = self.convertColourSpace(image, cv.CV_BGR2HSV)
         #cv.SaveImage('test.png', image)
         return (image, (camPos, headAngles))
@@ -73,6 +74,10 @@ class tools_v1():
         if angle <= -math.pi:
             angle += 2*math.pi
         return angle
+    
+    
+    
+    
     
     # process img, get QR-code data
     def getBeaconObservation(self, img):
