@@ -131,31 +131,27 @@ De volgens stap is de mapping van de gevonden blobs naar een landmark en de bere
 
 We beginnen met het berekenen van de afstand tot de landmark: je wilt de robot naar een landmark toe laten lopen en stoppen zodra hij op een bepaalde afstand van de landmark is. Dit is simpel te doen, door de afstand tussen de verschillende blobs te berekenen. Zoals je bij de vorige opdracht gezien hebt is het vision-systeem gevoelig voor ruis. Daarom bereken je een gemiddelde afstand tussen de blobs. 
 
-Om dit te doen moet een functie worden gemaakt in de \texit{vision} module. Deze krijgt als input alle blobs. Als output wordt de gemiddelde afstand in pixels terug gegeven. De functie moet alleen worden aageroepen als er 3 blobs zijn gevonden.
+Om dit te doen moet een functie worden gemaakt in de \textit{vision} module. Deze krijgt als input alle blobs. Als output wordt de gemiddelde afstand in pixels terug gegeven. De functie moet alleen worden aageroepen als er 3 blobs zijn gevonden.
 
-Voor het berekenen van de hoek is onder andere nodig wat het midden is van de landmark. Ook deze functie moet in de \textit{vision}-module worden geplaatst. Als input kijgt hij de posities van de gevonden blobs (kan varieren van 1 tot 3), en als output geeft hij het middelpunt van de set van gevonden blobs. 
+Voor het berekenen van de hoek is onder andere nodig wat het midden is van de landmark. Ook deze functie moet in de \textit{vision}-module worden geplaatst. Als input kijgt hij de posities van de gevonden blobs (kan varieren van 1 tot 3) en als output geeft hij het middelpunt van de set van gevonden blobs. 
 
-De camera van een 
+De kijkhoek van de camera is ongeveer 70 graden (1.22 radialen). Een plaatje is 320 pixels breed, daarmee kunnen we berekenen dat elke pixel een `breedte' heeft van ongeveer 0.0038 radialen (1.22/320). Het midden van een plaatje heeft een hoek van 0 en een x/y pixel-positie van 160/120. Met deze gegevens is het mogelijk om een functie te maken die een hoek berekend, gegeven een x/y punt in een plaatje. Maak deze functie in de vision-module (\textit{functie ...}).
 
+Als laatste stap moet een functie (\textit{functie...}) worden gemaakt die bepaald (indien alle blobs van een landmark zijn gevonden) wat de signature is van de geobserveerde landmark. De signatures zijn als volgt verdeeld:
 
-
-
-
-Test nu met de nao en een landmark wat ongeveer de gemiddelde pixel-waarde moet zijn, zodat de nao een halve-blok lengte van de landmark afstaat.
-
-Wanneer de Nao ongeveer op de juiste plek staat, moet de functie de signature (de ID, of het type landmark) terug gegeven m
-
-
-
-
-
-
-
+\begin{enumerate}
+\item - Blauw boven, finish
+\item - Blauw rechts, rechtsaf
+\item - Blauw links, linksaf
+\end{enumerate}
 
 \subsection{Navigatie}
 
+Het is nu mogelijk, gegeven de gevonden blobs, om te bepalen wat de positie van de robot is. Afhankelijk van de positie moet de robot iets anders doen. 
+In het geval dat de robot alle blobs van een landmark vindt, moet de functie, naast het terug geven van de distance en hoek, ook de landmark signature terug geven. Indien geen landmark kan worden bepaald, wordt er -1 als signature geretouneerd. 
 
+Bedenk hoe de robot moet lopen en werk deze laatste functie uit.
 
-
+Hoe zorg je ervoor dat je robot het snelst loopt?
 
 \end{document}
