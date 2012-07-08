@@ -10,14 +10,26 @@
 \maketitle
 
 \section{Introductie}
-Welkom bij de Summerschool Robotics.
+Welkom bij de Summerschool Robotics.\\
+\\
+De nodige code voor deze opdracht kun je downloaden van:\\ \url{http://ducthnaoteam.nl/summerschool/dag1_start.zip}\\
+\\
+Maak de map \textit{SummerschoolRobotics2012} aan op je desktop en unzip de code in die map. Je kunt nu beginnen met de eerste opdracht van deze summerschool. \\
+\\
+veel plezier en succes!\\
+\\
+Het Dutch Nao Team.\\
+\\
+\textbf{Wireless informatie:}\\
+Router:  Dutch Nao Team Robolab\\
+Wachtwoord: DnT10RuleS\\
+Deze router is voor de mensen, zittend het dichts bij de lift.\\
+\\
+Router:  Dutch Nao Team NAO\\
+Wachtwoord: sam+moos\\
+Deze router is voor de mensen, zittend het dichts bij de glazen wand
 
-Download de code van .....
-Unzip het 
 
-blabla
-
-veel plezier!
 
 
 \tableofcontents
@@ -34,14 +46,14 @@ Komende dagen zul je gaan werken binnen een framework van verschillende bestande
 \begin{itemize}
 \item config.py - start de code
 \item module - Een class die code bevat. Moet minimaal de functie \textit{setDependencies(self, modules)} hebben.
-\item main-module - Zelfd als een module, maar bevat minimaal de functies \textit{setDependencies(self, modules)} en \textit{start(self)}. Deze word als eerst aangeroepen.
+\item main-module - Zelfde als een module, maar bevat minimaal de functies \textit{setDependencies(self, modules)} en \textit{start(self)}. Deze word als eerst aangeroepen.
 \end{itemize}
 
 Het aanroepen van config.py start de code. Een module is niks anders dan een verzameling code en functies die onafhankelijk van de andere code kan opereren. De code die jullie gaan schrijven bestaat uit modules voor de verschillende dagen, en uit modules die wij voor je hebben geschreven. Het opsplitsen van code op deze manier zorgt voor een duidelijke structuur en goed overzicht. We gaan nu eerst kijken hoe jullie zelf een module kunnen maken.
 
 \subsubsection{Een Main-Module aanmaken}
 Open een nieuw document in Notepad++, noem het \textit{main.py} en sla het op in de map \textit{modules} van het geleverde framework. 
-Een module begint met een klasse-naam gelijk aan zijn bestandsnaam. Een main-file bevat daarnaast ook minimaal 2 functies: \textit{setDependencies} en \textit{start}. \textit{setDependencies} word gebruikt om aan te geven welke modules gebruikt worden door deze modules. \textit{start} word aangeroepen als main.
+Een module begint met een klasse-naam gelijk aan zijn bestandsnaam. Een main-file bevat daarnaast ook minimaal 2 functies: \textit{setDependencies} en \textit{start}. \textit{setDependencies} word gebruikt om aan te geven welke modules gebruikt worden door deze module. \textit{start} word aangeroepen als main.
 Omdat de functies op dit moment nog geen inhoud hebben, moet je het commando \textit{pass} onder de functie-declaratie geven. Het bestand zou er nu als volgt eruit moeten laten zien:
 
 \noindent \line(1,0){100}
@@ -216,4 +228,5 @@ Extra noties en tips:
 \end{itemize}
 
 Geef aan als je hiermee klaar bent, dan zullen wij je de volgende opdracht geven.
+
 \end{document}
