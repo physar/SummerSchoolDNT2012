@@ -48,7 +48,8 @@ class tools_v1():
         cv.SetData(image,picture.tostring(), picture.size[0]*3)
         hsvImage = cv.CreateImage(size, cv.IPL_DEPTH_8U, 3)
         cv.CvtColor(image, hsvImage, cv.CV_BGR2HSV)
-        return (image, (camPos, headAngles))
+        
+        return (hsvImage, (camPos, headAngles))
     
     def minimizedAngle( angle ):
         """ maps an angle to the interval [pi, pi] """
