@@ -30,7 +30,7 @@ class main:
         start = time.time()
         #self.motion.walkTo(0.89,0.02,0)
         
-        '''
+        
         while (time.time() - start < 30):
             self.globals.redBallProxy.startTracker()
             position = self.globals.redBallProxy.getPosition()

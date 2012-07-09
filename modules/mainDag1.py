@@ -1,50 +1,78 @@
 import time
+import math
 
-class mainDag1():
-    globals         = True
-    tools           = True
-    motion          = True
-    behaviour       = True
-    vision          = True
-    pathplanning    = None
-    localization    = None
-
+class mainDag1:
     def setDependencies(self, modules):
-        self.globals        = modules.getModule("globals")
-        self.tools          = modules.getModule("tools")
-        self.motion         = modules.getModule("motion")
-        self.behaviour      = modules.getModule("behaviour")
-
+        self.globals = modules.getModule("globals")
+        self.motion = modules.getModule("motion")
+        self.tools  = modules.getModule("tools")
         
+
     def start(self):
-        #ipadress of NAO
-        self.globals.setIPadress("192.168.1.35")
         self.globals.createProxies()
-        self.globals.speechProxy.say(' Where is my ball!!')
-
-        #init motions
+        #self.globals.speechProxy.say("Where is my ball at")
         self.motion.init()
-        
-        #subscribe to camera, to recieve images
-        #self.tools.cSubscribe()
-        
-        
         self.motion.stiff()
         self.motion.normalPose()
-        #with this posistion it always staight and high enough at the wall
+        #self.motion.walkTo(0.5,0,0)
         self.motion.setHead(0,-0.5)
         
-        search = False
+
+        #subscribe to camera, to recieve images
+        self.tools.cSubscribe()
         
-        while (search == False):
+        
+       # 
+        
+        #with this posistion it always staight and high enough at the wall
+        
+        
+        start = time.time()
+        #self.motion.walkTo(0.89,0.02,0)
+        
+        
+        while (time.time() - start < 30):
             self.globals.redBallProxy.startTracker()
+            position = self.globals.redBallProxy.getPosition()
+            print position
+            [x,y,_] = position
             
+            self.motion.walkTo(x,y,0)
+            time.sleep(0.5)
+            '''if x > 0.
+            theta = math.atan(y/x)
+            # hacked influencing of perception, causing walking forward to have priority
+            
+                theta *= 0.4      
+                x = (3.0 * (x - 0.17))  
+                y *= 0.6 
+                if x >1:
+                    x =1
+                self.motion.setWalkTargetVelocity(x , y, theta, 0.8)#max ( 1-x, 0.85 ))
+            
+                #self.globals.motProxy.waitUntilWalkIsFinished()
+
+                #self.motion.walkTo(x,y,0)
+                #time.sleep(5)
+            if x != 0: 
+                self.motion.kickStraight(0)
+            
+            
+            theta = math.atan(y/x)
+            # hacked influencing of perception, causing walking forward to have priority
+            
+            theta *= 0.4      
+            x = (3.0 * (x - 0.17))  
+            y *= 0.6 
+            if x >1:
+                x =1
+            self.motion.setWalkTargetVelocity(x , y, theta, 0.8)#max ( 1-x, 0.85 ))
+            time.sleep(0.5)
+            '''
         
-        
-            time.sleep(60)
+           
         
         self.globals.redBallProxy.stopTracker()
-        
-        
+        self.motion.init()
         
         

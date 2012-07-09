@@ -1,9 +1,8 @@
 import cv
 from naoqi import ALProxy
 import math
-import Image
 
-class tools_v1():    
+class tools_v2():    
     globals = None
 
     def setDependencies(self, modules):
@@ -23,7 +22,7 @@ class tools_v1():
         self.cUnsubscribe()
         self.globals.vidProxy.setParam(18,1)
         # subscribe(gvmName, resolution={0,1,2}, colorSpace={0,9,10,rgb=11,hsy=12,bgr=13}, fps={5,10,15,30}
-        self.globals.vidProxy.subscribe("python_GVM", resolution, 11, 30)
+        self.globals.vidProxy.subscribe("python_GVM", resolution, 13, 30)
        
     # get snapshot from camera
     def getSnapshot(self):
@@ -39,18 +38,21 @@ class tools_v1():
         
         # Get image
         # shot[0]=width, shot[1]=height, shot[6]=image-data
+        
         shot = self.globals.vidProxy.getImageRemote("python_GVM")
         size = (shot[0], shot[1])
-        picture = Image.frombuffer("RGB", size, shot[6], "raw", "BGR", 0, 1)
- 
-        #create a open cv image of the snapshot
         image = cv.CreateImageHeader(size, cv.IPL_DEPTH_8U, 3)     
-        cv.SetData(image,picture.tostring(), picture.size[0]*3)
-        hsvImage = cv.CreateImage(size, cv.IPL_DEPTH_8U, 3)
-        cv.CvtColor(image, hsvImage, cv.CV_BGR2HSV)
+        cv.SetData(image, shot[6], shot[0]*3)
+        image = self.convertColourSpace(image, cv.CV_BGR2HSV)
         
-        return (hsvImage, (camPos, headAngles))
-    
+        return (image, (camPos, headAngles))
+        
+    # conversion is an int: cv.CV_<scrColorSpace>2<dstColorSpace>
+    def convertColourSpace(self, srcImage, conversion):
+        dstImage = cv.CreateImage(cv.GetSize(srcImage), cv.IPL_DEPTH_8U, 3)
+        cv.CvtColor(srcImage, dstImage, conversion)
+        return dstImage
+        
     def SaveImage(self, name, img):
         cv.SaveImage(name, img)
     

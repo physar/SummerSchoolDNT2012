@@ -7,10 +7,10 @@ class vision_v1():
     def setDependencies(self, modules):
         self.globals = modules.getModule("globals")
 
-    #Filter HSV Image with given values
-    def filterImage(self, img, minHSV, maxHSV):
+    #Find Blue Blob
+    def filterImage(self,image):
         '''
-        Input: HSV Image, 2 List of min and max HSV values 
+        Input: HSV Image
         Output: Black White Matrix/Image      
         '''
         return filtImMat

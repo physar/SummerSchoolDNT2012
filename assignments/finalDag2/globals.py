@@ -12,9 +12,9 @@ class globals():
     def setDependencies(self, modules):
         pass
     
-    def setIPadress(self, ipadress):
-        """ Set ip-adress of nao """
-        self.ipadress = ipadress
+    #def setIPadress(self, ipadress):
+     #   """ Set ip-adress of nao """
+      #  self.ipadress = ipadress
         
     def createProxies(self):
         """ Set all proxies used by other modules """

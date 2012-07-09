@@ -196,11 +196,15 @@ class vision_v4():
         maxSize = 300
         
         circles = cv2.HoughCircles(imagenp,cv.CV_HOUGH_GRADIENT,dp,minDist, None,param1,param2,minSize, maxSize)
-
+        print 'Found circles:' + str(circles)
         if circles is not None:
             ############ CODE MISSING ###########
             #Find all the centers off the found Circles and append them in 1 list[]
-            #print 'lengte cicles:' + str(circles)
+            #
+            #for i in xrange(len(circles[0])):
+            #    radius = circles[0][ i][2]
+            #    center = [circles[0][ i][0], circles[0][ i][1]]
+                
                       
         if circles == None:
             return None
