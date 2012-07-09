@@ -1,0 +1,96 @@
+\documentclass[a4paper]{article}
+
+\usepackage{hyperref}
+
+\title{\textbf{Robotics Summerschool Juli 2012} \\ Opdrachten Dag 3}
+\author{Dutch Nao Team - \url{http://dutchnaoteam.nl}}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Introductie}
+Welkom bij de Summerschool Robotics.\\
+\\
+De nodige code voor deze opdracht kun je downloaden van:\\ \url{http://ducthnaoteam.nl/summerschool/dag3\_start.zip}\\
+\\
+Unzip de code in de map \textit{SummerschoolRobotics2012} op je desktop. Je kunt nu beginnen met de derde opdracht van deze summerschool. \\
+\\
+Veel plezier en succes!\\
+\\
+Het Dutch Nao Team.\\
+\\
+\textbf{Wireless informatie:}\\
+Router:  Dutch Nao Team Robolab\\
+Wachtwoord: DnT10RuleS\\
+Deze router is voor de mensen, zittend het dichts bij de lift.\\
+\\
+Router:  Dutch Nao Team NAO\\
+Wachtwoord: sam+moos\\
+Deze router is voor de mensen, zittend het dichts bij de glazen wand
+
+
+\tableofcontents
+
+\newpage
+
+
+\section{Opdrachten}
+Voor deze opdracht is het de bedoeling een pathplanner met behulp van A* ontwikkeld wordt die de mogelijkheid geeft de Nao een weg door het doolhof te laten vinden. Daarbij zijn er de volgende moeilijkheidsgraden beschikbaar:
+
+\subsection{Moeilijk}
+Implementeer geheel zelf een pathplanner met behulp van A*. Redeneer hierbij voor je begint te programmeren zorvuldig over de volgende aspecten:
+\begin{itemize}
+\item Hoe representeer je op een slimme manier verschillende states van het doolhof?
+\item Hoe bepaal je wat een geldige zet (move) is in het doolhof?
+\item Wat gebruik je als kostenfunctie bij het kiezen van elke zet?
+\item Wat is de uiteindelijke goalstate die je probeert te bereiken?
+\item Hoe representeer je de output, ofwel het pad dat doorlopen moet worden?
+\end{itemize}
+
+Probeer modulair te werken. Maak aparte functies die controleren of het doel is bereikt, wat de kosten
+zijn van een bepaalde state transitie, enzovoorts.
+
+Als alles geimplementeerd is, maak een main functie om je code uit te testen. Probeer verschillende doolhoven uit als je representatie zich hiervoor leent.\\
+Optioneel: maak een mooie visuele presentatie van hoe het doolhof doorlopen moet worden.
+
+
+\subsection{Middelmatig/moeilijk}
+Werk in het bestand \textit{aStar\_mediummoeilijk.py}.\\
+De representatie van het doolhof is hier al gegeven. Zie hiervoor het bestand \textit{maze.txt} voor een mogelijke voorbeeldrepresentatie. Het bestand \textit{mazeParser.py} maakt hier een leesbare output van. De variabele validMove die in de main van de file \textit{aStar\_mediummoeilijk.py} wordt aangemaakt bevat een dictionary met in alle posities van het doolhof de geldige posities die hier aan grenzen (de mogelijke moves vanaf elke state zijn dus eigenlijk al bekend).
+
+Hierna moet zelf aan de slag gegaan worden met deze validMove dictionary om A* in te implementeren. 
+
+\subsection{Middelmatig}
+Werk in het bestand \textit{aStar\_medium.py}.\\
+De representatie van het doolhof is hier al gegeven. Zie hiervoor het bestand maze.txt voor een mogelijke voorbeeldrepresentatie. 
+Het bestand mazeParser.py maakt hier een leesbare output van. De variabele validMove die in de main van de file aStar\_medium.py wordt aangemaakt bevat een dictionary met in alle posities van het doolhof de geldige posities die hier aan grenzen (de
+mogelijke moves vanaf elke state zijn dus eigenlijk al bekend).
+
+\textit{findShortestPath} is hier de functie waarin A* geimplementeerd moet worden. Een beginnetje is al gemaakt, maar de loop moet nog zelf geimplementeerd worden. De opzet van functies finished((estimatedCost, costSoFar, path), end) en getCost(node1,
+node2) zijn gegeven maar moeten worden ingevuld en verwerkt in je algoritme.
+
+\subsection{Makkelijk}
+Werk in het bestand \textit{aStar\_makkelijk.py}.\\
+
+De meeste functies van de A* implementatie zijn al gegeven, waaronder de main loop. Er moeten wel nog wat functies ingevuld worden, waaronder:
+\textit{
+\begin{itemize}
+\item getUnseenNeighbors(seen, neighbors)
+\item addToQueue(queue, newPaths)
+\item finished((estimatedCost, costSoFar, path), end)
+\item getCost(node1, node2)
+\end{itemize}
+}
+
+Lees de comments bij elke functie header om erachter te komen wat er wordt verwacht van de functie en 
+pas dit aan. Voordat je begint is het verstandig eerst aandachtig naar de volgende functies te kijken:
+\begin{itemize}
+\item findShortestPath(start, end, validMoves)
+\item getNewPaths(estimatedCost, costSoFar, path, lastNode, end, neighbors)
+\end{itemize}
+
+Kijk of je alle input en output waardes goed begrijpt. Begin daarna pas met programmeren.
+
+
+\end{document}
