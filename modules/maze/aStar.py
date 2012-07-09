@@ -71,13 +71,13 @@ def getCost(node1, node2):
 def visualize(screen, edges, (estimatedCost, costSoFar, path), scale=(100,100), offset=(100,100)):
     screen.fill(white)  # reset the canvas
     pathPoints = []
-    for node in path:
+    for node in path:   # draw the path
         pathPoints.append((node[0]*scale[0]+offset[0], node[1]*scale[1]+offset[1]))
     pygame.draw.lines(screen, black, False, pathPoints, 3)
     
-    offset = (offset[0]-50, offset[1]-50)
+    offset = (offset[0]-scale[0]/2, offset[1]-scale[1]/2)
     keys = edges.keys()
-    for key in keys:
+    for key in keys:    # draw the maze
         keyPoint = (key[0]*scale[0]+offset[0], key[1]*scale[1]+offset[1])
         values = edges[key]
         for value in values:
