@@ -1,7 +1,6 @@
 import cv
 from naoqi import ALProxy
 import math
-import Image
 
 class tools_v1():    
     globals = None
