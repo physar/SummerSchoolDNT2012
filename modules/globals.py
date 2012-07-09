@@ -23,3 +23,4 @@ class globals():
         self.memProxy = ALProxy( "ALMemory", self.ipadress, 9559 ) 
         self.ledProxy = ALProxy( "ALLeds", self.ipadress, 9559 )
         self.redBallProxy = ALProxy( "ALRedBallTracker", self.ipadress, 9559 )
+        self.speechProxy = ALProxy( "TextToSpeech", self.ipadress, 9559 )

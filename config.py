@@ -17,7 +17,7 @@ VERBOSE = 1
 #######
 
 #main module:   connects all modules to each other
-moduledict["main"]          = "main_v2"
+moduledict["main"]          = "mainDag1"
 #tools module:  contains some pre-defined tools which can be used
 moduledict["tools"]         = [1, "tools_v1"]
 #motion module: contains pre-defined motion patterns
