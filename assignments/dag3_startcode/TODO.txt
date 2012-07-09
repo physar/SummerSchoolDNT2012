@@ -1,0 +1,7 @@
+TODO
+This folder contains aStar files based on 'aStar.py' in ./SummerSchoolDNT2012/modules/maze.
+
+-Add the files and folders of the framework to each directory.
+-Place the three aStar files in the appropriate folder and remove their tags, i.e. remove '_easy', '_intermediate' and '_hard'.
+-Place 'mazeParser.py' in the directories 'easy' and 'intermediate'.
+-Place 'maze.txt' in the same directories as the config-files.
