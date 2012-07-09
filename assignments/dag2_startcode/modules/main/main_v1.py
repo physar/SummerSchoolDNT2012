@@ -1,5 +1,4 @@
-import cv
-class main:
+class main_v1:
     def setDependencies(self, modules):
         self.globals = modules.getModule("globals")
         self.motion = modules.getModule("motion")
@@ -9,6 +8,3 @@ class main:
         self.globals.setProxies()
         self.motion.init()
         self.tools.cSubscribe()
-        
-        img = self.tools.getSnapshot()
-        self.tools.SaveImage("test.png", img[0])
