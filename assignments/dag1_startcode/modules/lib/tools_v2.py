@@ -2,7 +2,7 @@ import cv
 from naoqi import ALProxy
 import math
 
-class tools_v1():    
+class tools_v2():    
     globals = None
 
     def setDependencies(self, modules):
@@ -22,7 +22,7 @@ class tools_v1():
         self.cUnsubscribe()
         self.globals.vidProxy.setParam(18,1)
         # subscribe(gvmName, resolution={0,1,2}, colorSpace={0,9,10,rgb=11,hsy=12,bgr=13}, fps={5,10,15,30}
-        self.globals.vidProxy.subscribe("python_GVM", resolution, 11, 30)
+        self.globals.vidProxy.subscribe("python_GVM", resolution, 13, 30)
        
     # get snapshot from camera
     def getSnapshot(self):
