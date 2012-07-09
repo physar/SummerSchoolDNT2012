@@ -130,18 +130,25 @@ Aan de hand van de geprintte data, kun je nu een systeem maken welke \textit{Non
 \item Tip: De \textit{HoughCircles}-functie kan meerdere cirkels terug geven. \textit{len(circles[0])} geeft je het aantal gevonden cirkels. De straal en centrum (x en y) van de $i${de} cirkel van de lijst is te vinden met respectievelijk \textit{circles[0][i][2]}, \textit{circles[0][i][0]}, \textit{circles[0][i][1]}
 \item Tip: Met behulp van het commando: \textit{cv.Circle(img, center, radius, (0, 0, 255), 3, 8, 0)} kun je een cirkel met centrum \textit{center} en straal \textit{radius} teken op het plaatje img. Wanneer je het plaatje opslaat kun je visueel zien waar het algorithme denkt dat de blobs zitten.
 \end{itemize}
+
 \subsubsection{Meerdere blobs}
 Nu we blobs kunnen herkennen en berekenen waar ze in een plaatje zitten, kunnen we meerdere blobs combineren.
 
 Hiervoor is een functie nodig (in de vision-module, \textit{getBlobsData(self, img)}) die een plaatje inlaad (geven door de main-module, via \textit{getSnapshot()}), die voor elke kleur blob detectie doet en vervolgens zoekt  naar Hough-Circles. De functie moet 2 outputs geven, de eerste is het aantal gevonden blobs, de tweede is een lijst met daarin de coordinaten (op volgorde) van de paarse, blauwe en oranje blob. Als er geen coordinaten van een blob zijn gevonden dan staat er \textit{None} op deze plek. 
 
+Het is belangrijk dat je gedurende het programma steeds dezelfde volgorde van blobs aanhoud in je lijst: \textit{[paars, blauw, oranje]}. Test je code zorgvuldig zodat je weet dat dit het geval is.
+
 \subsection{Landmark Detectie}
 Gefeliciteerd, als je hier ben aangekomen zul je een werkende vision module hebben die blobs kan vinden.
 
-De volgens stap is de mapping van de gevonden blobs naar een landmark en de berekening van de afstand en de hoek tot de landmark.
+\subsubsection{Stoppen...}
+De volgens stap is de mapping van de gevonden blobs naar een landmark en de berekening van de afstand en de hoek tot de landmark. Deze waardes gebruiken we om op de ``perfecte" plek te komen voor de landmark, zodat we netjes links of rechts kunnen draaien.
 
-We beginnen met het berekenen van de afstand tot de landmark: je wilt de robot naar een landmark toe laten lopen en stoppen zodra hij op een bepaalde afstand van de landmark is. Dit is simpel te doen door de afstand tussen de verschillende blobs te berekenen. Zoals je bij de vorige opdracht gezien hebt is het vision-systeem gevoelig voor ruis. Daarom bereken je een gemiddelde afstand tussen de blobs. Hiervoor moet de functie \textit{calcAvgBlobDistance(self, blobList} worden gemaakt in de \textit{vision} module. Deze krijgt als input de lijst met blob gegevens. Als output wordt de gemiddelde afstand (in pixels) tussen de gevonden blobs terug gegeven. Bij 1 (of 0) blobs kan er geen afstand worden berekent, en wordt er \textit{None} geretouneerd.
+We beginnen met het berekenen van de afstand tot de landmark: je wilt de robot naar een landmark toe laten lopen en stoppen zodra hij op een bepaalde afstand van de landmark is. Dit is simpel te doen door de afstand tussen de verschillende blobs te berekenen. Zoals je bij de vorige opdracht gezien hebt is het vision-systeem gevoelig voor ruis. Daarom bereken je een gemiddelde afstand tussen de blobs. Hiervoor moet de functie \textit{calcAvgBlobDistance(self, blobList)} worden gemaakt in de \textit{vision} module. Deze krijgt als input de lijst met blob gegevens. Als output wordt de gemiddelde afstand (in pixels) tussen de gevonden blobs terug gegeven. Bij 1 (of 0) blobs kan er geen afstand worden berekent, en wordt er \textit{None} geretouneerd.
 
+Met deze code is het al mogelijk om op de juiste afstand te stoppen voor je landmark. Test je code en bepaal bij welke gemiddelde afstand de robot op de juiste afstand (ongeveer 44 cm) staat en laat de robot dan stoppen.
+
+\subsubsection{... en gaan}
 Voor het berekenen van de hoek naar een landmark, moet bekend zijn wat het midden van de landmark is. De functie die dit doet is \textit{calcMidLandmark(self, blobList)}. Als input krijgt het de lijst met gevonden blob-data en als output geeft het een x/y pixel positie die het midden aangeeft van de set van de gevonden blobs. Indien geen blobs zijn gevonden moet geeft de functie \textit{None} terug.
 
 Wanneer het midden van de set van blobs bekend is, kan de hoek ten opzichte van de robot worden berekend (\textit{calcAngleLandmark(self, center)}). Hiervoor gebruik je de volgende informatie:
@@ -163,13 +170,16 @@ Indien een landmark niet kan worden bepaald, is de signature gelijk aan -1.
 
 Het is nu mogelijk, gegeven een snapshot, om blobs te vinden, de afstand tussen de blobs te berekenen (en daarmee de afstand van de robot naar de landmark te schatten) en de hoek naar de gevonden blobs te berekenen. Verder kan (indien er alle blobs zijn gevonden) de signature van de landmark worden achterhaald.
 
-Met al deze informatie kan de functie \textit{calcDirection(self, blobList, blobDist, angle, signature)} worden gemaakt. Omdat dit geen vision-functie meer is, maar een behaviour moet een behaviour module worden aangemaakt.
+Met al deze informatie kan de functie \textit{calcDirection(self, blobFound, blobDist, angle, signature)} worden gemaakt. Omdat dit geen vision-functie meer is, maar een behaviour moet een behaviour module worden aangemaakt.
 
-De main module zal nu een snapshot maken, all vision functies aanroepen en de resultaten doorgeven aan de behaviour module. Deze module zorgt er dan voor, afhankelijk van de input, welke richting de robot op moet lopen of draaien.
+De main module zal nu een snapshot maken, all vision functies aanroepen en de resultaten doorgeven aan de behaviour module. Deze module zorgt er dan voor, afhankelijk van de input, welke richting de robot op moet lopen of draaien. 
 \\
 
-Hoe zorg je ervoor dat je robot het snelst door het doolhof gaat?\\
+Hoe zorg je ervoor dat je robot het snelst door het doolhof gaat?
 
-(extra notie: omdat je in een modulair systeem werkt kun je snel meerdere kopieen van je modules maken en laden. Hiermee kun je makkelijk kleine aanpassingen testen, zonder werkende code te verliezen)
+\begin{itemize}
+\item Tip: omdat je in een modulair systeem werkt kun je snel meerdere kopieen van je modules maken en laden. Hiermee kun je makkelijk kleine aanpassingen testen, zonder werkende code te verliezen
+\item Tip: ALs je het makkelijker/mooier programmeren vindt kun je met behulp van simpele if-statements in je main bepalen wanneer het aanroepen van een functie wel of niet zin heeft.
+\end{itemize}
 
 \end{document}
