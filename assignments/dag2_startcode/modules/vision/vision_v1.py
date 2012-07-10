@@ -15,7 +15,7 @@ class vision_v1():
         '''
         return filtImMat
         
-    #Find circle, as it is now should only find 1 circle per image
+    #Find Circle in a filtered image
     def findCircle(self,imageMat):
         '''
         Input: Black Whit Image
@@ -31,7 +31,7 @@ class vision_v1():
     def getBlobsData(self, image):
         '''
         Input: Image
-        Return: numberOfBlobsFound , [List [x,y-pixels] of 
+        Return: numberOfBlobsFound , [List [center-pixels, radius] of blobs]
         '''
         return blobsFound , blobsList
         
@@ -43,26 +43,26 @@ class vision_v1():
         '''
         return Distance
     
-    # Fince centre of a Landmark
+    # Find centre of a Landmark
     def calcMidLandmark(self, blobList):
         '''
-        Input: [Pink, Blue Orange]
-        Output: Center pixel
+        Input: [Pink, Blue, Orange]
+        Output: center pixel, (x,y)
         '''
         return center
         
-    # Find the angle of a pixel that the Nao has to walk
+    # Find the angle between a found Landmark and the Nao
     def calcAngleLandmark(self, center):
         '''
-        Input: Pixel
-        Output: Angle
+        Input: center pixel, (x,y)
+        Output: Angle, radians
         '''    
         return angle
     
-    # Find the Signature from 3 blobs
+    # Find the Signature
     def findSignature(self,blobList):
         '''
-        Input: [Pink, Blue Orange]
+        Input: [Pink, Blue, Orange]
         Output: Signature
         '''
         return signature
