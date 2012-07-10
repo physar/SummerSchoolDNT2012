@@ -3,6 +3,7 @@ class main_v1:
         self.globals = modules.getModule("globals")
         self.motion = modules.getModule("motion")
         self.tools = modules.getModule("tools")
+        self.vision = modules.getModule("vision")
 
     def start(self):
         self.globals.setProxies()
