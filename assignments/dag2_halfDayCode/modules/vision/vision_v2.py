@@ -99,10 +99,20 @@ class vision_v1():
         Input: Image
         Return: numberOfBlobsFound , [List [x,y-pixels] of 
         '''
+        minHSVBlue   = []
+        maxHSVBlue   = []
+        minHSVOrange = []
+        maxHSVOrange = []
+        minHSVPink1  = []
+        maxHSVPink1  = []
+        minHSVPink2  = []
+        maxHSVPink2  = []
+        
         #filter image with given HSV
-        filtImageB = self.filterImageBlue(image)
-        filtImageP = self.filterImagePink(image)
-        filtImageO = self.filterImageOrange(image)
+        filtImageB = self.filterImage(image, minHSVBlue, maxHSVBlue)
+        filtImageO = self.filterImage(image, minHSVOrange, maxHSVOrange)
+        filtImageP = self.filterImageDouble(image, minHSVPink1, maxHSVPink1, minHSVPink2, maxHSVPink2)
+        
         #Find Circles (should only be 1 per image ) Blobs = (x,y)
         blobsP = self.findCircle(filtImageP)
         blobsB = self.findCircle(filtImageB)
@@ -123,17 +133,18 @@ class vision_v1():
             blobsList.append(blobsP[0])
             blobsFound +=1 
         else:
-            blobsList.append(blobsP)
+            blobsList.append(None)
         if blobsB != None: 
             blobsList.append(blobsB[0])
             blobsFound +=1
         else:
-            blobsList.append(blobsB)
+            blobsList.append(None)
         if blobsO != None: 
             blobsList.append(blobsO[0])
             blobsFound +=1 
         else:
-            blobsList.append(blobsO)
+            blobsList.append(None)
+            
         print 'BlobsFound: ' + str(blobsFound)
         return blobsFound , blobsList
         
