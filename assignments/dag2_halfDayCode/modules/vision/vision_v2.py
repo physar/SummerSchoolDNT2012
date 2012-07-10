@@ -8,7 +8,7 @@ class vision_v1():
         self.globals = modules.getModule("globals")
 
         
-    #Find the Pink Blob
+    #Find a Blob with a color at one positions in the spectrum
     def filterImage(self,img, minHSV, maxHSV):
         '''
         Input: HSV Image, 2 List of min and max HSV values 
@@ -17,7 +17,7 @@ class vision_v1():
         size = (320,240)   
 
         filterdIm = cv.CreateImage(size, cv.IPL_DEPTH_8U, 1)
-        [hMin,sMin,vMin] = minHSV
+        [hMin, sMin, vMin] = minHSV
         [hMax, sMax, vMax] = maxHSV
         hsvMin1B = cv.Scalar(hMin,sMin,vMin, 0)
         hsvMax1B = cv.Scalar(hMax, sMax, vMax, 0)    
@@ -26,13 +26,11 @@ class vision_v1():
         cv.InRangeS(image, hsvMin1B, hsvMax1B, filterdIm)
 
         cv.Smooth(filterdIm, filterdIm, cv.CV_MEDIAN, 5)
-        cv.SaveImage('filterd.png' ,filterdIm)
-        
         filtImMat = cv.GetMat(filterdIm)
         return filtImMat
         
-    #Find Blue Blob
-    def filterImagePink(self,image):
+    #Find a Blob with a color at two positions in the spectrum
+    def filterImageDouble(self, image, minHSV1, maxHSV1, minHSV2, maxHSV2):
         '''
         Input: HSV Image
         Output: Black White Matrix/Image      
@@ -40,24 +38,25 @@ class vision_v1():
         # Size of the images
         size = (320,240)
                 
-        filtImA = cv.CreateImage(size, cv.IPL_DEPTH_8U, 1)
-        filtImB = cv.CreateImage(size, cv.IPL_DEPTH_8U, 1)
+        filtIm1 = cv.CreateImage(size, cv.IPL_DEPTH_8U, 1)
+        filtIm2 = cv.CreateImage(size, cv.IPL_DEPTH_8U, 1)
         filterdIm = cv.CreateImage(size, cv.IPL_DEPTH_8U, 1)
 
-        #pink saturday
-        hsvMin1A = cv.Scalar(0,  148,  77, 0)
-        hsvMax1A = cv.Scalar(7,  237,  217, 0)    
-
-        hsvMin1B = cv.Scalar(174,  148,  77, 0)
-        hsvMax1B = cv.Scalar(181,  237,  217, 0)    
+        #Color scalars
+        [hMin1, sMin1, vMin1] = minHSV1
+        [hMax1, sMax1, vMax1] = maxHSV1
+        [hMin2, sMin2, vMin2] = minHSV2
+        [hMax2, sMax2, vMax2] = maxHSV2
+        hsvMin1 = cv.Scalar(hMin1, sMin1, vMin1, 0)
+        hsvMax1 = cv.Scalar(hMax1, sMax1, vMax1, 0)  
+        hsvMin2 = cv.Scalar(hMin2, sMin2, vMin2, 0)
+        hsvMax2 = cv.Scalar(hMax2, sMax2, vMax2, 0)  
 
         # Color detection using HSV
+        cv.InRangeS(im, hsvMin1, hsvMax1, filtIm1)
+        cv.InRangeS(im, hsvMin2, hsvMax2, filtIm2)
         
-        cv.InRangeS(im, hsvMin1A, hsvMax1A, filtImA)
-        cv.InRangeS(im, hsvMin1B, hsvMax1B, filtImB)
-        
-        cv.Or(filtImA, filtImA, filterdIm)
-        cv.SaveImage('filterPink.png' ,filterdIm)
+        cv.Or(filtIm1, filtIm2, filterdIm)
         filtImMat = cv.GetMat(filterdIm)
         return filtImMat
         
