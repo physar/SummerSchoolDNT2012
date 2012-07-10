@@ -38,24 +38,25 @@ Deze router is voor de mensen, zittend het dichts bij de glazen wand
 Voor deze opdracht is het de bedoeling een pathplanner gebasseerd op het A* algoritme te maken\footnote{Zie wikipedia voor een beschrijvin van het algorithme en pseudo-code: \url{http://en.wikipedia.org/wiki/A*_search_algorithm}}. De implementatie van dit algoritme zal ervoor zorgden dat de nao straks met behulp van een kaart in een keer door het doolhof heen loopt. Voor deze opdracht hebben we verschillende moeilijkheidsgraden gemaakt:
 
 \subsection{De moeilijkheidsgraden}
-Hieronder een beschrijving van de moeilijkheids graden. Een beschrijving van beschikbare functies (map inladen, visualizatie) kun je vinden in de volgende sectie.
+Hieronder een beschrijving van de \textit{Doom}-moeilijkheids graden. Een beschrijving van beschikbare functies (map inladen, visualizatie) kun je vinden in de volgende sectie.
 
-\subsubsection{Hard}
+\subsubsection{Hurt me plenty}
 Implementeer geheel zelf een pathplanner met behulp van A*. Redeneer hierbij voor je begint te programmeren zorvuldig over de volgende aspecten:
 \begin{itemize}
-\item Hoe representeer je op een slimme manier het doolhof in je code?
 \item Hoe bepaal je wat een geldige zet (move) is in het doolhof?
 \item Wat gebruik je als kostenfunctie bij het kiezen van elke zet?
 \item Wat is de uiteindelijke goalstate die je probeert te bereiken?
 \item Hoe representeer je de output, ofwel het pad dat doorlopen moet worden? 
 \end{itemize}
 
-Probeer modulair te werken: het is beter om meerdere losse functies te hebben die elk 1 kleine taak uitvoeren, dan 1 grote die alles doet. Maak bijvoorbeeld aparte functies die controleren of het doel is bereikt, wat de kosten zijn van een pad of state, welke state-transitie mogelijk enzovoorts. 
+Probeer modulair te werken: het is beter om meerdere losse functies te hebben die elk 1 kleine taak uitvoeren, dan 1 grote die alles doet.
 
-\subsubsection{Intermediate}
-In het \textit{Intermediate}-framework zijn alle functies voor gedefineerd en worden er tips gegeven hoe je deze functies moet implementeren.
+ Maak bijvoorbeeld aparte functies die controleren of het doel is bereikt, wat de kosten zijn van een pad of state, welke state-transitie mogelijk enzovoorts. 
 
-\subsubsection{Easy}
+\subsubsection{Hey, not too rough}
+In het \textit{Hey, not too rough}-framework zijn alle functies voor gedefineerd en worden er tips gegeven hoe je deze functies moet implementeren.
+
+\subsubsection{I'am to young to die}
 Om je nog meer op weg te helpen is in dit framework nog meer voor je ingevuld. In dit framework houd je je alleen bezig met de meest essentiele functies van A* zodat je alsnog inzicht krijgt hoe het algoritme werkt. In de code kun je tips en instructies vinden voor uitwerking van de opdracht.
 
 \subsection{A* Tips}
