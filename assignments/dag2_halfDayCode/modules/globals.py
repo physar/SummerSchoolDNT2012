@@ -1,7 +1,7 @@
 from naoqi import ALProxy
 
 class globals:
-    ipadress = "localhost"
+    ipadress = "192.168.1.53"
     
     def setDependencies(self, modules):
         pass
@@ -12,5 +12,5 @@ class globals:
         self.vidProxy = ALProxy("ALVideoDevice", self.ipadress, 9559)
         #If you want you can use these
         #self.speechProxy = ALProxy("ALTextToSpeech", self.ipadress, 9559)
-        #self.memProxy = ALProxy( "ALMemory", self.ipadress, 9559 ) 
+        self.memProxy = ALProxy( "ALMemory", self.ipadress, 9559 ) 
         #self.ledProxy = ALProxy( "ALLeds", self.ipadress, 9559 )

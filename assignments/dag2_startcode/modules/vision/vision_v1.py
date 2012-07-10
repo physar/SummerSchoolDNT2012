@@ -38,7 +38,7 @@ class vision_v1():
     # Get Average Distance between multiple blobs  
     def calcAvgBlobDistance(self, blobList):
         '''
-        Input: [Pink, Blue Orange]
+        Input: [Pink, Blue, Orange]
         Output: Avarege Distance in pixels
         '''
         return Distance
