@@ -36,9 +36,9 @@ Deze router is voor de mensen, zittend het dichts bij de glazen wand
 
 
 \section{Opdrachten}
-Voor deze opdracht is het de bedoeling een pathplanner met behulp van A* ontwikkeld wordt die de mogelijkheid geeft de Nao een weg door het doolhof te laten vinden. Daarbij zijn er de volgende moeilijkheidsgraden beschikbaar:
+Voor deze opdracht is het de bedoeling een pathplanner volgens het A* algorit met behulp van A* ontwikkeld wordt die de mogelijkheid geeft de Nao een weg door het doolhof te laten vinden. Daarbij zijn er de volgende moeilijkheidsgraden beschikbaar:
 
-\subsection{Moeilijk}
+\subsection{Hard}
 Implementeer geheel zelf een pathplanner met behulp van A*. Redeneer hierbij voor je begint te programmeren zorvuldig over de volgende aspecten:
 \begin{itemize}
 \item Hoe representeer je op een slimme manier verschillende states van het doolhof?
@@ -55,13 +55,13 @@ Als alles geimplementeerd is, maak een main functie om je code uit te testen. Pr
 Optioneel: maak een mooie visuele presentatie van hoe het doolhof doorlopen moet worden.
 
 
-\subsection{Middelmatig/moeilijk}
+\subsection{Intermediate}
 Werk in het bestand \textit{aStar\_mediummoeilijk.py}.\\
 De representatie van het doolhof is hier al gegeven. Zie hiervoor het bestand \textit{maze.txt} voor een mogelijke voorbeeldrepresentatie. Het bestand \textit{mazeParser.py} maakt hier een leesbare output van. De variabele validMove die in de main van de file \textit{aStar\_mediummoeilijk.py} wordt aangemaakt bevat een dictionary met in alle posities van het doolhof de geldige posities die hier aan grenzen (de mogelijke moves vanaf elke state zijn dus eigenlijk al bekend).
 
 Hierna moet zelf aan de slag gegaan worden met deze validMove dictionary om A* in te implementeren. 
 
-\subsection{Middelmatig}
+\subsection{Easy}
 Werk in het bestand \textit{aStar\_medium.py}.\\
 De representatie van het doolhof is hier al gegeven. Zie hiervoor het bestand maze.txt voor een mogelijke voorbeeldrepresentatie. 
 Het bestand mazeParser.py maakt hier een leesbare output van. De variabele validMove die in de main van de file aStar\_medium.py wordt aangemaakt bevat een dictionary met in alle posities van het doolhof de geldige posities die hier aan grenzen (de
@@ -70,27 +70,16 @@ mogelijke moves vanaf elke state zijn dus eigenlijk al bekend).
 \textit{findShortestPath} is hier de functie waarin A* geimplementeerd moet worden. Een beginnetje is al gemaakt, maar de loop moet nog zelf geimplementeerd worden. De opzet van functies finished((estimatedCost, costSoFar, path), end) en getCost(node1,
 node2) zijn gegeven maar moeten worden ingevuld en verwerkt in je algoritme.
 
-\subsection{Makkelijk}
-Werk in het bestand \textit{aStar\_makkelijk.py}.\\
-
-De meeste functies van de A* implementatie zijn al gegeven, waaronder de main loop. Er moeten wel nog wat functies ingevuld worden, waaronder:
-\textit{
-\begin{itemize}
-\item getUnseenNeighbors(seen, neighbors)
-\item addToQueue(queue, newPaths)
-\item finished((estimatedCost, costSoFar, path), end)
-\item getCost(node1, node2)
-\end{itemize}
-}
-
-Lees de comments bij elke functie header om erachter te komen wat er wordt verwacht van de functie en 
-pas dit aan. Voordat je begint is het verstandig eerst aandachtig naar de volgende functies te kijken:
-\begin{itemize}
-\item findShortestPath(start, end, validMoves)
-\item getNewPaths(estimatedCost, costSoFar, path, lastNode, end, neighbors)
-\end{itemize}
-
-Kijk of je alle input en output waardes goed begrijpt. Begin daarna pas met programmeren.
+\subsection{Tips}
+A* houdt een priority queue bij van de mogelijke paden in het doolhof. Deze zijn gesorteerd op de geschatte totale kosten om via elk pad het eindput te bereiken. Het pad met de laagste geschatte kosten heeft de hoogste prioriteit en staat vooraan in de priority queue. Als een pad wordt uigebreid ontstaan er nieuwe paden die in de queue geplaatst moeten worden aan de hand van hun geschatte kosten. De library \textit{bisect} \footnote{Documentatie over \textit{bisect} op: \url{http://docs.python.org/library/bisect.html}.} kan gebruikt worden om een nieuw pad op de juiste plaats toe te voegen in de priority queue:\\
+\noindent \line(1,0){100}
+\begin{verbatim}
+import bisect
+...
+bisect.insort(queue, newPath)
+\end{verbatim}
+\noindent \line(1,0){100}\\
+Het is hierbij van belang hoe \textit{newPath} gerepresenteerd wordt. Als \textit{newPath} een Tuple is dan zal het toegevoegd worden aan de hand van het eerste argument in de Tuple; bij een Array aan de hand van het eerste argument in de Array. Het is daarom van belang dat de geschatte totale kosten van een pad het eerste argument is in de gekozen datatype. 
 
 
 \end{document}
