@@ -12,6 +12,9 @@ black = (0,0,0)
 
 
 class aStar:
+    def setDependencies(modules):
+        pass
+        
     def findShortestPath(self):
         pass    # implement A*
         

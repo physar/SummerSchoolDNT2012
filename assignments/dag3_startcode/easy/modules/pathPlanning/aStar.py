@@ -12,6 +12,9 @@ black = (0,0,0)
 
 
 class aStar:
+    def setDependencies(modules):
+        pass
+    
     '''
     'pathQueue' is a priority queue containing all the possible paths 
     with their total estimated costs and costs so far.

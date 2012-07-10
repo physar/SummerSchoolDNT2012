@@ -8,4 +8,5 @@ import bisect
 import mazeParser
 
 class aStar:
-    pass
+    def setDependencies(modules):
+        pass

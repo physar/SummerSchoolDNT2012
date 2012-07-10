@@ -31,14 +31,14 @@ class vision_v1():
     def getBlobsData(self, image):
         '''
         Input: Image
-        Return: numberOfBlobsFound , [List [center-pixels] of blobs]
+        Return: numberOfBlobsFound , [List [center-pixels, radius] of blobs]
         '''
         return blobsFound , blobsList
         
     # Get Average Distance between multiple blobs  
     def calcAvgBlobDistance(self, blobList):
         '''
-        Input: [Pink, Blue, Orange]
+        Input: [Pink, Blue Orange]
         Output: Avarege Distance in pixels
         '''
         return Distance
@@ -47,7 +47,7 @@ class vision_v1():
     def calcMidLandmark(self, blobList):
         '''
         Input: [Pink, Blue, Orange]
-        Output: center pixel as (x,y)
+        Output: center pixel, (x,y)
         '''
         return center
         
@@ -55,7 +55,7 @@ class vision_v1():
     def calcAngleLandmark(self, center):
         '''
         Input: center pixel, (x,y)
-        Output: Angle in radians
+        Output: Angle, radians
         '''    
         return angle
     

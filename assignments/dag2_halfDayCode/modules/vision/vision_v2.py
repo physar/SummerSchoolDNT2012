@@ -1,7 +1,7 @@
 import cv, cv2
 import numpy, math
 
-class vision_v1():    
+class vision_v2():    
     globals = None
 
     def setDependencies(self, modules):
@@ -23,7 +23,7 @@ class vision_v1():
         hsvMax1B = cv.Scalar(hMax, sMax, vMax, 0)    
         
         #filter image on given HSV values
-        cv.InRangeS(image, hsvMin1B, hsvMax1B, filterdIm)
+        cv.InRangeS(img, hsvMin1B, hsvMax1B, filterdIm)
 
         #smooth and return
         cv.Smooth(filterdIm, filterdIm, cv.CV_MEDIAN, 5)
@@ -31,7 +31,7 @@ class vision_v1():
         return filtImMat
         
     #Find a Blob with a color at two positions in the spectrum
-    def filterImageDouble(self, image, minHSV1, maxHSV1, minHSV2, maxHSV2):
+    def filterImageDouble(self, img, minHSV1, maxHSV1, minHSV2, maxHSV2):
         '''
         Input: HSV Image
         Output: Black White Matrix/Image      
@@ -54,8 +54,8 @@ class vision_v1():
         hsvMax2 = cv.Scalar(hMax2, sMax2, vMax2, 0)  
 
         # Color detection using HSV
-        cv.InRangeS(im, hsvMin1, hsvMax1, filtIm1)
-        cv.InRangeS(im, hsvMin2, hsvMax2, filtIm2)
+        cv.InRangeS(img, hsvMin1, hsvMax1, filtIm1)
+        cv.InRangeS(img, hsvMin2, hsvMax2, filtIm2)
         
         #combine images
         cv.Or(filtIm1, filtIm2, filterdIm)
@@ -104,14 +104,14 @@ class vision_v1():
         Input: Image
         Return: numberOfBlobsFound , [List [x,y-pixels] of 
         '''
-        minHSVBlue   = []
-        maxHSVBlue   = []
-        minHSVOrange = []
-        maxHSVOrange = []
-        minHSVPink1  = []
-        maxHSVPink1  = []
-        minHSVPink2  = []
-        maxHSVPink2  = []
+        minHSVBlue   = [110, 214, 100]
+        maxHSVBlue   = [120, 238, 217]
+        minHSVOrange = [  6, 171,  72]
+        maxHSVOrange = [ 17, 238, 220]
+        minHSVPink1  = [  0, 148,  77]
+        maxHSVPink1  = [  7, 237, 217]
+        minHSVPink2  = [174, 148,  77]
+        maxHSVPink2  = [181, 237, 217]
         
         #filter image with given HSV
         filtImageB = self.filterImage(image, minHSVBlue, maxHSVBlue)
@@ -156,7 +156,7 @@ class vision_v1():
     # Get Average Distance between multiple blobs
     def calcAvgBlobDistance(self, blobList):
         '''
-        Input: [Pink, Blue Orange]
+        Input: [Pink, Blue, Orange]
         Output: Avarege Distance in pixels
         '''
         return Distance
@@ -173,7 +173,7 @@ class vision_v1():
     def calcAngleLandmark(self, center):
         '''
         Input: center pixel, (x,y)
-        Output: Angle, radians
+        Output: Angle in radians
         '''
         return angle
     

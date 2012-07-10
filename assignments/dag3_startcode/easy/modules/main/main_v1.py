@@ -1,5 +1,4 @@
-import cv
-class main:
+class main_v1:
     def setDependencies(self, modules):
         self.globals = modules.getModule("globals")
         self.motion = modules.getModule("motion")
@@ -17,7 +16,3 @@ class main:
         #Throug extended research at the cost of many fallen Nao's
         #we at the Dutch Nao Team found that the optimal head position is
         self.motion.setHead(0,-0.5)
-        
-
-        
-        
