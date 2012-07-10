@@ -1,0 +1,95 @@
+\documentclass[a4paper]{article}
+
+\usepackage{hyperref}
+
+\title{\textbf{Robotics Summerschool Juli 2012} \\ Opdrachten Dag 3}
+\author{Dutch Nao Team - \url{http://dutchnaoteam.nl}}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Introductie}
+Welkom bij de Summerschool Robotics.\\
+\\
+De code voor deze opdracht kun je downloaden onder het ``Dag 3" van de site:\\ 
+\url{http://ducthnaoteam.nl/summerschool/}\\
+\\
+Kies de moeilijkheidsgraad van de code, download en unzip de code vervolgend in de map \textit{SummerschoolRobotics2012} op je desktop. Je kunt nu beginnen met de derde opdracht van deze summerschool. \\
+\\
+veel plezier en succes!\\
+\\
+Het Dutch Nao Team.\\
+\\
+\textbf{Wireless informatie:}\\
+Router:  Dutch Nao Team Robolab\\
+Wachtwoord: DnT10RuleS\\
+Deze router is voor de mensen, zittend het dichts bij de lift.\\
+\\
+Router:  Dutch Nao Team NAO\\
+Wachtwoord: sam+moos\\
+Deze router is voor de mensen, zittend het dichts bij de glazen wand
+
+\tableofcontents
+
+\newpage
+
+\section{Opdrachten}
+Voor deze opdracht is het de bedoeling een pathplanner gebasseerd op het A* algoritme te maken\footnote{Zie wikipedia voor een beschrijvin van het algorithme en pseudo-code: \url{http://en.wikipedia.org/wiki/A*_search_algorithm}}. De implementatie van dit algoritme zal ervoor zorgden dat de nao straks met behulp van een kaart in een keer door het doolhof heen loopt. Voor deze opdracht hebben we verschillende moeilijkheidsgraden gemaakt:
+
+\subsection{De moeilijkheidsgraden}
+Hieronder een beschrijving van de moeilijkheids graden. Een beschrijving van beschikbare functies (map inladen, visualizatie) kun je vinden in de volgende sectie.
+
+\subsubsection{Hard}
+Implementeer geheel zelf een pathplanner met behulp van A*. Redeneer hierbij voor je begint te programmeren zorvuldig over de volgende aspecten:
+\begin{itemize}
+\item Hoe representeer je op een slimme manier het doolhof in je code?
+\item Hoe bepaal je wat een geldige zet (move) is in het doolhof?
+\item Wat gebruik je als kostenfunctie bij het kiezen van elke zet?
+\item Wat is de uiteindelijke goalstate die je probeert te bereiken?
+\item Hoe representeer je de output, ofwel het pad dat doorlopen moet worden? 
+\end{itemize}
+
+Probeer modulair te werken: het is beter om meerdere losse functies te hebben die elk 1 kleine taak uitvoeren, dan 1 grote die alles doet. Maak bijvoorbeeld aparte functies die controleren of het doel is bereikt, wat de kosten zijn van een pad of state, welke state-transitie mogelijk enzovoorts. 
+
+\subsubsection{Intermediate}
+In het \textit{Intermediate}-framework zijn alle functies voor gedefineerd en worden er tips gegeven hoe je deze functies moet implementeren.
+
+\subsubsection{Easy}
+Om je nog meer op weg te helpen is in dit framework nog meer voor je ingevuld. In dit framework houd je je alleen bezig met de meest essentiele functies van A* zodat je alsnog inzicht krijgt hoe het algoritme werkt. In de code kun je tips en instructies vinden voor uitwerking van de opdracht.
+
+\subsection{A* Tips}
+A* houdt een priority queue bij van de mogelijke paden in het doolhof. Deze zijn gesorteerd op de geschatte totale kosten om via elk pad het eindput te bereiken. Het pad met de laagste geschatte kosten heeft de hoogste prioriteit en staat vooraan in de priority queue. Als een pad wordt uigebreid ontstaan er nieuwe paden die in de queue geplaatst moeten worden aan de hand van hun geschatte kosten. De library \textit{bisect} \footnote{Documentatie over \textit{bisect} op: \url{http://docs.python.org/library/bisect.html}.} kan gebruikt worden om een nieuw pad op de juiste plaats toe te voegen in de priority queue:\\
+\noindent \line(1,0){100}
+\begin{verbatim}
+import bisect
+...
+bisect.insort(queue, newPath)
+\end{verbatim}
+\noindent \line(1,0){100}
+\\\\
+Het is hierbij van belang hoe \textit{newPath} gerepresenteerd wordt. Als \textit{newPath} een Tuple is dan zal het toegevoegd worden aan de hand van het eerste argument in de Tuple; bij een Array aan de hand van het eerste argument in de Array. Het is daarom van belang dat de geschatte totale kosten van een pad het eerste argument is in de gekozen datatype. 
+
+\subsection{De map en visualizatie.}
+Om een map in te laden, en voor debugging-mogelijkheden staan in het framework 2 extra modules:
+\begin{itemize}
+\item mazeparser\_v1.py
+\item visualizer\_v1.py
+\end{itemize}
+
+Je kunt deze modules gebruiken, maar je kunt ook zelf schrijven aan de hand van de interface-beschrijvingen.
+
+\subsubsection{mazeparser\_v1.py}
+De mazeparser beschikt over 2 functies:
+\begin{itemize}
+\item \textit{parseMaze(filename="./maze.txt")} - Het argument filename is optioneel, als de functie als \textit{parseMaze()} wordt aangeroepen, dan wordt het .txt-bestand `maze.txt' geopend en ingelezen. De functie retouneerd 2 waardes. Het eerste is een dictionary van edges, het 2e een dictionary van geldige moves per cel. Een cel is gerepresenteerd als een tuple $(x,y)$, waarbij (0,0) links boven is en $x$ de horizontale richting aangeeft. Alle mogelijke moves vanuit een cel worden gezet in een lijst.
+\item \textit{prettyPrint(edges)} - Als input wordt de dictionary \textit{edges} verwacht (gegeven door de bovenstaande functie). De ouput is een geprintte versie van het doolhof in je terminal.
+\end{itemize}
+
+\subsubsection{visualizer\_v1.py}
+De visualizer bevat slechts 1 functie: \\
+\textit{visualize(edges, path, scale=(100,100), offset=(100,100))}\\
+Hierin is \textit{edges} de dictionary van edges die bij de \textit{maxeparser} wordt terug gegeven. \textit{path} is een lijst van coordinaten waar het pad doorheen loopt. De \textit{scale} en \textit{offset} functies zijn ervoor om de grafische output op te schalen.
+
+
+\end{document}
