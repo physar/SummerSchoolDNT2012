@@ -31,7 +31,7 @@ class vision_v1():
     def getBlobsData(self, image):
         '''
         Input: Image
-        Return: numberOfBlobsFound , [List [center-pixels, radius] of blobs]
+        Return: numberOfBlobsFound , [List [center-pixels] of blobs]
         '''
         return blobsFound , blobsList
         
@@ -47,7 +47,7 @@ class vision_v1():
     def calcMidLandmark(self, blobList):
         '''
         Input: [Pink, Blue, Orange]
-        Output: center pixel, (x,y)
+        Output: center pixel as (x,y)
         '''
         return center
         
@@ -55,7 +55,7 @@ class vision_v1():
     def calcAngleLandmark(self, center):
         '''
         Input: center pixel, (x,y)
-        Output: Angle, radians
+        Output: Angle in radians
         '''    
         return angle
     
