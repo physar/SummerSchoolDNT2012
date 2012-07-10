@@ -9,7 +9,7 @@ class vision_v1():
 
         
     #Find a Blob with a color at one positions in the spectrum
-    def filterImage(self,img, minHSV, maxHSV):
+    def filterImage(self, img, minHSV, maxHSV):
         '''
         Input: HSV Image, 2 List of min and max HSV values 
         Output: Black White Matrix/Image      
@@ -25,6 +25,7 @@ class vision_v1():
         #filter image on given HSV values
         cv.InRangeS(image, hsvMin1B, hsvMax1B, filterdIm)
 
+        #smooth and return
         cv.Smooth(filterdIm, filterdIm, cv.CV_MEDIAN, 5)
         filtImMat = cv.GetMat(filterdIm)
         return filtImMat
@@ -56,11 +57,15 @@ class vision_v1():
         cv.InRangeS(im, hsvMin1, hsvMax1, filtIm1)
         cv.InRangeS(im, hsvMin2, hsvMax2, filtIm2)
         
+        #combine images
         cv.Or(filtIm1, filtIm2, filterdIm)
+        
+        #smooth and return
+        cv.Smooth(filterdIm, filterdIm, cv.CV_MEDIAN, 5)
         filtImMat = cv.GetMat(filterdIm)
         return filtImMat
         
-    #Find circle, as it is now should only find 1 circle per image
+    #Find Circle in a filtered image
     def findCircle(self,imageMat):
         '''
         Input: Black Whit Image
@@ -148,7 +153,7 @@ class vision_v1():
         print 'BlobsFound: ' + str(blobsFound)
         return blobsFound , blobsList
         
-    # Get Average Distance between multiple blobs  
+    # Get Average Distance between multiple blobs
     def calcAvgBlobDistance(self, blobList):
         '''
         Input: [Pink, Blue Orange]
@@ -156,28 +161,27 @@ class vision_v1():
         '''
         return Distance
     
-    # Fince centre of a Landmark
+    # Find centre of a Landmark
     def calcMidLandmark(self, blobList):
         '''
-        Input: [Pink, Blue Orange]
-        Output: Center pixel
+        Input: [Pink, Blue, Orange]
+        Output: center pixel, (x,y)
         '''
         return center
         
-    # Find the angle of a pixel that the Nao has to walk
+    # Find the angle between a found Landmark and the Nao
     def calcAngleLandmark(self, center):
         '''
-        Input: Pixel
-        Output: Angle
-        '''    
+        Input: center pixel, (x,y)
+        Output: Angle, radians
+        '''
         return angle
     
-    # Find the Signature from 3 blobs
+    # Find the Signature
     def findSignature(self,blobList):
         '''
-        Input: [Pink, Blue Orange]
+        Input: [Pink, Blue, Orange]
         Output: Signature
         '''
         return signature
-
     
