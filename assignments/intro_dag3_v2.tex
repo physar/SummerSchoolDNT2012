@@ -35,13 +35,13 @@ Deze router is voor de mensen, zittend het dichts bij de glazen wand
 \newpage
 
 \section{Opdrachten}
-Voor deze opdracht is het de bedoeling een pathplanner gebasseerd op het A* algoritme te maken\footnote{Zie wikipedia voor een beschrijvin van het algorithme en pseudo-code: \url{http://en.wikipedia.org/wiki/A*_search_algorithm}}. De implementatie van dit algoritme zal ervoor zorgden dat de nao straks met behulp van een kaart in een keer door het doolhof heen loopt. Voor deze opdracht hebben we verschillende moeilijkheidsgraden gemaakt:
+Voor deze opdracht is het de bedoeling om een padplanner gebasseerd op het A* algoritme te maken\footnote{Zie wikipedia voor een beschrijvin van het algorithme en pseudo-code: \url{http://en.wikipedia.org/wiki/A*_search_algorithm}}.Met dit algoritme kan je de Nao straks met behulp van een kaart in \'e\'en keer met het kortste pad door het doolhof heen laten lopen. Voor deze opdracht hebben we verschillende moeilijkheidsgraden gemaakt:
 
 \subsection{De moeilijkheidsgraden}
-Hieronder een beschrijving van de \textit{Doom}-moeilijkheids graden. Een beschrijving van beschikbare functies (map inladen, visualizatie) kun je vinden in de volgende sectie.
+Hieronder een beschrijving van de \textit{Doom}-moeilijkheidsgraden. Een beschrijving van beschikbare functies (map inladen, visualizatie) kun je vinden in de volgende sectie.
 
 \subsubsection{Hurt me plenty}
-Implementeer geheel zelf een pathplanner met behulp van A*. Redeneer hierbij voor je begint te programmeren zorvuldig over de volgende aspecten:
+Implementeer geheel zelf een padplanner met behulp van A*. Redeneer hierbij voor je begint te programmeren zorvuldig over de volgende aspecten:
 \begin{itemize}
 \item Hoe bepaal je wat een geldige zet (move) is in het doolhof?
 \item Wat gebruik je als kostenfunctie bij het kiezen van elke zet?
@@ -51,16 +51,16 @@ Implementeer geheel zelf een pathplanner met behulp van A*. Redeneer hierbij voo
 
 Probeer modulair te werken: het is beter om meerdere losse functies te hebben die elk 1 kleine taak uitvoeren, dan 1 grote die alles doet.
 
- Maak bijvoorbeeld aparte functies die controleren of het doel is bereikt, wat de kosten zijn van een pad of state, welke state-transitie mogelijk enzovoorts. 
+Maak bijvoorbeeld aparte functies die controleren of het doel is bereikt, wat de kosten zijn van een pad of state, welke state-transities mogelijk zijn enzovoorts. 
 
 \subsubsection{Hey, not too rough}
-In het \textit{Hey, not too rough}-framework zijn alle functies voor gedefineerd en worden er tips gegeven hoe je deze functies moet implementeren.
+In het \textit{Hey, not too rough}-framework zijn alle functies voor gedefinieerd en worden er tips gegeven over hoe je deze functies moet implementeren.
 
 \subsubsection{I'am to young to die}
-Om je nog meer op weg te helpen is in dit framework nog meer voor je ingevuld. In dit framework houd je je alleen bezig met de meest essentiele functies van A* zodat je alsnog inzicht krijgt hoe het algoritme werkt. In de code kun je tips en instructies vinden voor uitwerking van de opdracht.
+Om je goed op weg te helpen is in dit framework nog meer voor je ingevuld. In dit framework houd je je alleen bezig met de meest essenti\"ele functies van A* zodat je alsnog inzicht krijgt in hoe het algoritme werkt. In de code kun je tips en instructies vinden voor de uitwerking van de opdracht.
 
 \subsection{A* Tips}
-A* houdt een priority queue bij van de mogelijke paden in het doolhof. Deze zijn gesorteerd op de geschatte totale kosten om via elk pad het eindput te bereiken. Het pad met de laagste geschatte kosten heeft de hoogste prioriteit en staat vooraan in de priority queue. Als een pad wordt uigebreid ontstaan er nieuwe paden die in de queue geplaatst moeten worden aan de hand van hun geschatte kosten. De library \textit{bisect} \footnote{Documentatie over \textit{bisect} op: \url{http://docs.python.org/library/bisect.html}.} kan gebruikt worden om een nieuw pad op de juiste plaats toe te voegen in de priority queue:\\
+A* houdt een priority queue bij van de mogelijke incomplete paden in het doolhof. Deze zijn gesorteerd op de geschatte totale kosten om via elk pad het eindpunt te bereiken. Het pad met de laagste geschatte kosten heeft de hoogste prioriteit en staat vooraan in de priority queue. Als een pad wordt uitgebreid ontstaan er nieuwe paden die in de queue geplaatst moeten worden aan de hand van hun geschatte kosten. De library \textit{bisect} \footnote{Documentatie over \textit{bisect} op: \url{http://docs.python.org/library/bisect.html}.} kan gebruikt worden om een nieuw pad op de juiste plaats toe te voegen in de priority queue:\\
 \noindent \line(1,0){100}
 \begin{verbatim}
 import bisect
@@ -69,21 +69,21 @@ bisect.insort(queue, newPath)
 \end{verbatim}
 \noindent \line(1,0){100}
 \\\\
-Het is hierbij van belang hoe \textit{newPath} gerepresenteerd wordt. Als \textit{newPath} een Tuple is dan zal het toegevoegd worden aan de hand van het eerste argument in de Tuple; bij een Array aan de hand van het eerste argument in de Array. Het is daarom van belang dat de geschatte totale kosten van een pad het eerste argument is in de gekozen datatype. 
+Het is hierbij van belang hoe \textit{newPath} gerepresenteerd wordt. Als \textit{newPath} een Tuple is dan zal het toegevoegd worden aan de hand van het eerste argument in de Tuple; bij een Array aan de hand van het eerste argument in de Array. Het is daarom van belang dat de geschatte totale kosten van een pad het eerste argument is in het gekozen datatype. 
 
 \subsection{De map en visualizatie.}
-Om een map in te laden, en voor debugging-mogelijkheden staan in het framework 2 extra modules:
+Om een map in te laden, en voor debugging staan in het framework 2 extra modules:
 \begin{itemize}
 \item mazeparser\_v1.py
 \item visualizer\_v1.py
 \end{itemize}
 
-Je kunt deze modules gebruiken, maar je kunt ook zelf schrijven aan de hand van de interface-beschrijvingen.
+Je kunt deze modules gebruiken, maar je kunt ze ook zelf schrijven aan de hand van de interface-beschrijvingen (laatste is zeker aan te raden als je het leuk vind om te programmeren!).
 
 \subsubsection{mazeparser\_v1.py}
 De mazeparser beschikt over 2 functies:
 \begin{itemize}
-\item \textit{parseMaze(filename="./maze.txt")} - Het argument filename is optioneel, als de functie als \textit{parseMaze()} wordt aangeroepen, dan wordt het .txt-bestand `maze.txt' geopend en ingelezen. De functie retouneerd 2 waardes. Het eerste is een dictionary van edges, het 2e een dictionary van geldige moves per cel. Een cel is gerepresenteerd als een tuple $(x,y)$, waarbij (0,0) links boven is en $x$ de horizontale richting aangeeft. Alle mogelijke moves vanuit een cel worden gezet in een lijst.
+\item \textit{parseMaze(filename="./maze.txt")} - Het argument filename is optioneel, als de functie als \textit{parseMaze()} wordt aangeroepen, dan wordt het .txt-bestand `maze.txt' geopend en ingelezen. De functie retourneerd 2 waardes. Het eerste is een dictionary van edges, het 2e een dictionary van geldige moves per cel. Een cel is gerepresenteerd als een tuple $(x,y)$, waarbij (0,0) links boven is en $x$ de horizontale richting aangeeft. Alle mogelijke moves vanuit een cel worden gezet in een lijst.
 \item \textit{prettyPrint(edges)} - Als input wordt de dictionary \textit{edges} verwacht (gegeven door de bovenstaande functie). De ouput is een geprintte versie van het doolhof in je terminal.
 \end{itemize}
 

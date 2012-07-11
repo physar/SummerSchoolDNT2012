@@ -13,20 +13,72 @@
 
 \section{Introductie}
 
-Nu jullie A* planningsalgoritme af is kunnen jullie de robot bij een willekeurige ingang zetten, en de robot naar een willekeurige uitgang laten lopen! Alleen: Hoe weet de robot nou steeds waar hij is? Jullie zouden net als bij dag 2 de kleurenmarkers kunnen gebruiken op de muur om zo te bepalen waar je bent. Maar zoals je misschien al hebt gemerkt zijn deze kleurenmarkers vrij instabiel. Vandaag gaan we met erg stabiele landmarks werken die in de robotica veel worden gebruikt. Dit zijn Augmented Reality (AR) codes. Op het middelpunt van elke vierkant in de grid leggenwe een AR code neer. Zo kan de Nao altijd stabiel zien waar hij naartoe loopt.
+Nu jullie A* planningsalgoritme af is zouden jullie de robot bij een willekeurige ingang kunnen zetten, en de robot intrueren om naar een willekeurige uitgang te lopen! Alleen weet de robot nog niet waar hij is in het doolhof. Jullie zouden net als bij dag 2 de kleurenmarkers kunnen gebruiken op de muur om zo te bepalen waar je bent.Zoals je misschien al hebt gemerkt zijn deze kleurenmarkers vrij instabiel. Vandaag gaan we met stabielere landmarks werken die in de robotica veel worden gebruikt. Dit zijn Augmented Reality (AR) codes. Op het middelpunt van elke vierkant in de grid leggen we zo een AR code neer. Zo kan de Nao altijd stabiel zien waar hij naartoe loopt.
 
 \tableofcontents
 
 \newpage
 
 \section{AR codes}
-AR codes zijn zwart-witte markers die een ID of `signature' in binaire code erin hebben gebakken. We hebben een lijstje met de AR codes die we gebruiken en hun ID bijgevoegd in dit document. De AR codes ze zijn zwart wit zodat de overgangen tussen de lijnen makkelijk te herkennen zijn door een computer. Onze specifieke codes bestaan uit een 5x5 grid waarin elk vakje een binaire 1 of 0 aangeeft. Hieromheen zit een zwarte rand om de code makkelijk uit te kunnen lezen. Ze zijn vierkant met een vooraf gedefiniëerde grootte zodat robots met wat goniometrie precies kunnen bepalen hoever ze van de AR code af staan. De draaiing ten opzichte van de code kan niet altijd uniek bepaald worden (zie bijvoorbeeld AR code 666 in het tabelletje).
+AR codes zijn zwart-witte markers die een ID of `signature' in binaire code erin hebben gebakken. We hebben een lijstje met de AR codes die we gebruiken en hun ID bijgevoegd in dit document (scroll naar onder). De AR codes zijn alleen zwart-wit zodat de overgangen tussen de lijnen makkelijk te herkennen zijn door een computer. Onze specifieke codes bestaan uit een 5x5 grid waarin elk vakje een binaire 1 of 0 aangeeft. Hieromheen zit een zwarte rand om de code makkelijk uit te kunnen lezen. Ze zijn vierkant met een vooraf gedefini\"eerde grootte zodat robots met wat goniometrie precies kunnen bepalen hoever ze van de AR code af staan. De draaiing ten opzichte van de code kan kan ook altijd uniek bepaald worden.
+
+\begin{figure}[h]
+\begin{center}$
+\begin{array}{ccccc}
+\includegraphics[width=0.8in]{10.jpg} &
+\includegraphics[width=0.8in]{23.jpg} &
+\includegraphics[width=0.8in]{25.jpg} &
+\includegraphics[width=0.8in]{42.jpg} &
+\includegraphics[width=0.8in]{64.jpg}
+\end{array}$
+\end{center}
+\caption{AR codes (10, 23, 25, 42,64)}
+\end{figure}
+
+\begin{figure}[h]
+\begin{center}$
+\begin{array}{ccccc}
+\includegraphics[width=0.8in]{69.jpg} &
+\includegraphics[width=0.8in]{116.jpg} &
+\includegraphics[width=0.8in]{123.jpg} &
+\includegraphics[width=0.8in]{128.jpg} &
+\includegraphics[width=0.8in]{256.jpg}
+\end{array}$
+\end{center}
+\caption{AR codes (69, 116, 123, 128, 256)}
+\end{figure}
+
+\begin{figure}[h]
+\begin{center}$
+\begin{array}{ccccc}
+\includegraphics[width=0.8in]{444.jpg} &
+\includegraphics[width=0.8in]{456.jpg} &
+\includegraphics[width=0.8in]{501.jpg} &
+\includegraphics[width=0.8in]{507.jpg} &
+\includegraphics[width=0.8in]{512.jpg}
+\end{array}$
+\end{center}
+\caption{AR codes (444, 456, 501, 507, 512)}
+\end{figure}
+
+\begin{figure}[h]
+\begin{center}$
+\begin{array}{ccccc}
+\includegraphics[width=0.8in]{666.jpg} &
+\includegraphics[width=0.8in]{789.jpg} &
+\includegraphics[width=0.8in]{890.jpg} &
+\includegraphics[width=0.8in]{901.jpg} &
+\includegraphics[width=0.8in]{999.jpg}
+\end{array}$
+\end{center}
+\caption{AR codes (666, 789, 890, 901,999)}
+\end{figure}
 
 \section{AR code code}
-Net zoals alle OpenCV code is de code om AR codes te herkennen is geschreven in C$ \stackrel{}{++}$. Dit hebben we gedaan omdat Python doorgaans niet snel genoeg is voor Computer Vision. Als je het leuk vind om te weten wat hier allemaal bij komt kijken, vraag dit dan gerust aan Tijmen (die jongen met de oranje haren).
+Net zoals de OpenCV code die jullie hebben gebruikt is de code om AR codes te herkennen geschreven in C$ \stackrel{}{++}$. Dit hebben we gedaan omdat Python doorgaans niet snel genoeg is voor computer vision. Als je het leuk vind om te weten wat hier allemaal bij komt kijken, vraag dit dan gerust aan Tijmen (die jongen met de oranje haren).
 
 \begin{Exercise}
-Download de zip ARCodeTest van onze server, en pak deze uit.
+Download de ARCodeTest zip van onze server, en pak deze uit. Kijk in de map die je hebt uitgepakt.
 \end{Exercise}
 \vspace{10 mm}
 De specifieke rekencore van de AR code detectie zit in de dynamic link library file aruco124.dll. Hiervoor hebben we een python interface geschreven die zich bevind in \_ARimport.pyd en ARimport.py. De code in ARimport.py is zeker weten niet bedoeld om te lezen. Wat wel bedoeld is om te lezen is de ARtest.py file. Hier staat eigenlijk alles in wat je nodig hebt om AR markers te kunnen herkennen
