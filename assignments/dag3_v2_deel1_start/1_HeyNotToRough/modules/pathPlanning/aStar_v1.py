@@ -37,8 +37,9 @@ class aStar_v1:
             - List of paths that are extentions of 'path'.
             
         Tip:
-            - Make sure that you first clone 'path' before you extend it with a neighbour.
-              You can clone a list with the function list/1. For example: cloneList = list(originalList)
+            - It can be useful to extend a copy of 'path' with a neighbour.
+              You can create a copy of a list with the function list/1. 
+              For example: cloneList = list(originalList)
         '''
         pass
 
@@ -87,9 +88,15 @@ class aStar_v1:
             - None. (The queue passed to this function will be edited.)
             
         Each path in 'newPaths' is inserted into 'queue' according to its first element.
-        A path could be represented as (e_1, ..., e_n). Where 'e_1' is the total estimated 
-        cost of this path and 'e_n' is the list of nodes visited sofar.
-        This path will be inserted into 'queue' according to the value of 'e_1'.
+        Example:
+        queue = [(1, ':D'), (3, ':P')]
+        newElement = (2, '^_^')
+        print 'before: ', queue
+        bisect.insort(queue, newElement)
+        print 'after: ', queue
+        ---------
+        before: [(1, ':D'), (3, ':P')]
+        after: [(1, ':D'), (2, '^_^'), (3, ':P')]
         '''
         for path in newPaths:
             bisect.insort(queue, path)
