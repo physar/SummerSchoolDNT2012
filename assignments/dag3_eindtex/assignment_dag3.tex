@@ -89,7 +89,7 @@ De specifieke rekencore van de AR code detectie zit in de dynamic link library f
 \vspace{10 mm}
 
 Schrik niet dat er een regeltje output in je python scherm komt, deze kan je gewoon negeren. Dit komt door het omzetten van de C$\stackrel{}{++}$ naar Python code. 
-We gaan de code nu een klein beetje ontleden. Als eerste moeten de modules cv en cv2 geinclude worden (standaard voor computer vision AI software). Daarnaast gaan we numpy nodig hebben, dit is een python library die ervoor zorgt dat numerieke code erg snel uitgevoerd kan worden. Ook moeten we natuurlijk een ARimport class aanmaken. Dit gebeurd in de eerste 4 regels van ARtest.py.
+We gaan de code nu een stap voor stap ontleden. Als eerste moeten de modules cv en cv2 geinclude worden (d\'e standaard voor computer vision AI software). Daarnaast gaan we numpy nodig hebben, dit is een python library die ervoor zorgt dat numerieke code met matrices erg snel uitgevoerd kan worden. Ook moeten we natuurlijk een AR code detectie class importen. Dit gebeurd in de eerste 4 regels van ARtest.py. Wat er op de andere regels gebeurd staat hier en in de code uitgelegd.
 \begin{itemize}
 \item \emph{ARcode = ar.ARimport()} maken we een nieuw ARcode object aan. Tegelijk initialiseert deze regel ook dit object met al zijn nodige waardes.
 \item \emph{image = cv.LoadImage("test.png",cv.CV\_LOAD\_IMAGE\_COLOR)} Laad het opencv testplaatje als kleurenplaatje
@@ -106,14 +106,14 @@ Maak zelf wat plaatjes met 1 of meer AR codes erin en test hoe robuust de AR cod
 
 \section{Omgaan met de markers}
 
-Nu kan je makkelijk AR markers vinden in plaatjes, dit maakt de computer vision een stuk makkelijker! Het enige wat je nog nodig hebt is wat de x,y waardes zeggen over de locatie van de marker in de werkelijke 3D ruimte. Dit is natuurlijk nodig om de Nao naar de marker toe te laten lopen. Hiervoor hebben we de functie tools.calcPosition(x\_image,y\_image) in de tools module. Dit is een slimme functie die met behulp van de hoogte informatie van de nao, en de informatie dat de AR code op de grond ligt (!) berekend wat de echte x,y afstand is met als input de x en y waardes uit het plaatje. De functie neemt ook de draaiïng van het hoofd van de Nao mee, dus als de Nao zijn hoofd draait naar een marker dan is de output (x,y) nog steeds precies wat de Nao hoort te lopen om op de marker te komen (jammer genoeg loopt hij niet zo accuraat).
+Nu kan je makkelijk AR markers vinden in plaatjes, dit maakt de computer vision op de Nao een stuk makkelijker! Het enige wat je nu nog nodig hebt is een vertaalstap van de x,y waardes in het plaatje naar de x,y waardes in de echte wereld.. Dit is natuurlijk nodig om de Nao naar de marker toe te laten lopen. Hiervoor hebben we de functie tools.calcPosition(x\_in\_image,y\_in\_image) in de tools module. Dit is een slimme functie die met behulp van de hoogte informatie van de nao, en de informatie dat de AR code op de grond ligt (!) berekent wat de echte x,y afstand is met als input de x en y waardes uit het plaatje. De functie neemt ook de draaiïng van het hoofd van de Nao mee, dus als de Nao zijn hoofd draait naar een marker dan is de output (x,y) nog steeds precies wat de Nao hoort te lopen om op de marker te komen (jammer genoeg loopt hij nog steeds niet zo heel accuraat).
 
 \begin{Exercise}
 \begin{itemize}
 \item Schrijf nu een functie in een nieuwe dag 3 module waar je een plaatje van de Nao aan mee kan geven, en een lijst met informatie over alle markers teruggeeft. (bijvoorbeeld [(x\_1,y\_1,ID\_1), (x\_1,y\_1,ID\_1)]).
 \item Schrijf een functie die het hoofd van de Nao laat draaien naar een marker (input (x\_1,y\_1,ID\_1))
-\item Schrijf een functie die een functie op een marker laat lopen.
-\item Voeg alle ID markers op nummer toe aan de representatie van het doolhof.
+\item Schrijf een functie die een Nao op een marker af laat lopen.
+\item Voeg alle ID markers op nummer toe aan de representatie van het doolhof. Of controleer of we dit al gedaan hebben
 \item Test of al deze functies goed werken!
 \end{itemize}
 \end{Exercise}
@@ -123,13 +123,13 @@ Nu kan je makkelijk AR markers vinden in plaatjes, dit maakt de computer vision 
 
 \section{Volledige autonome navigatie}
 
-Je hebt nu alle tools om de Nao zelfstandig door het doolhof te laten lopen! Met A* kan de Nao een pad plannen, en met de AR markers weet de Nao waar hij is en kan je eenvoudig lopen.
+Je hebt nu alle tools om de Nao geheel zelfstandig door het doolhof te laten lopen! Met A* kan de Nao een pad plannen, en met de AR markers weet de Nao waar hij is en kan je hem eenvoudig laten lopen. Het enige dat de Nao nodig heeft is zijn beginpositie en de gewenste eindpositie.
 
 \begin{Exercise}
 \begin{itemize}
-\item Schrijf nu een main waarbij je zelf een beginpunt en eindpunt op kan geven, de Nao uit zichzelf het pad berekend vanuit het begin naar het einde, en deze dan ook loopt.
-\item Probeer je functie uit met verschillende begin en eindpunten, vertel ons of je het werkend hebt gekregen, dat is echt een geweldige prestatie!
-\item Als je nog tijd over hebt kan je een Nao zelf uit een doolhof laten lopen vanuit elke positie. De nao word hierbij op een random punt in het doolhof gezet en hij moet zelf bepalen waar hij is, en hoe hij van dat punt naar de opgegeven uitgang moet lopen. Denk er goed over na hoe de Nao kan bepalen waar hij is, en hoe hij gedraaid staat. Wat doe je als de Nao helemaal geen marker ziet?
+\item Schrijf nu een main waarbij je zelf een beginpunt en eindpunt op kan geven, de Nao uit zichzelf het pad berekend vanuit het begin naar het einde, en deze dan ook loopt met behulp van de AR markers. Je mag zelf verzinnen hoe je dit slim kan doen. (Als je rotatie/translatie informatie van de AR-markers wil hebben hiervoor moet je dit aan Tijmen vragen).
+\item Probeer je functie uit met verschillende begin- en eindpunten, vertel ons of je het werkend hebt gekregen, dat is namelijk echt een geweldige prestatie!
+\item Als je nog tijd over heben we een final challenge. De nao word hierbij op een random punt in het doolhof gezet en hij moet zelf bepalen waar hij is, en hoe hij van dat punt naar de opgegeven uitgang moet lopen. Denk er goed over na hoe de Nao kan bepalen waar hij is, en hoe hij gedraaid staat. Wat doe je als de Nao helemaal geen marker ziet?
 \end{itemize}
 \end{Exercise}
 \vspace{10 mm}
