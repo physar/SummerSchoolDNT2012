@@ -1,24 +1,17 @@
-import cv #import this first!
+import cv #import de opencv/numpy en AR code recognition library
 import cv2
 import numpy as np
 import ARimport as ar
 
 
-ARcode = ar.ARimport()
-#ARcode.test()
-image = cv.LoadImage("snapShot.png",cv.CV_LOAD_IMAGE_COLOR)
-im_array = np.asarray( image[:,:] )
-#im_array = im_array.astype(np.uint32)
-ARcode.setOutputFileName("output.png")
-ARcode.setShowOutput(True)
-returnint = ARcode.findMarkers(im_array)
+ARcode = ar.ARimport() #maak een nieuwe AR detectie object
+image = cv.LoadImage("test.png",cv.CV_LOAD_IMAGE_COLOR) #laad het testplaatje
+im_array = np.asarray( image[:,:] ) #maak van de opencv image een numpy array
+ARcode.setOutputFileName("output.png") #Ze de naam voor de output file
+ARcode.setShowOutput(True) #zeg dat het algoritme output moet tonen, kan je ook uitzetten
+returnint = ARcode.findMarkers(im_array) #vind de markers in het plaatje, returned hoeveel markers gevonden zijn
 
-output = ARcode.getFoundMarker(0) #input < returnint
-print 'output'
-print output.ID
-if output.ID == 4294967295L:
-    print 'None'
-else:
-    print((output.ID, output.x, output.y))
+output = ARcode.getFoundMarker(0) #input < returnint # 0 is voor de eerste marker 1 voor de 2e etc. # output structs met .x .y en .ID informatie
+print((output.ID, output.x, output.y))
 
                     

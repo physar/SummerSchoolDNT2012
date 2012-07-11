@@ -99,18 +99,13 @@ We gaan de code nu een stap voor stap ontleden. Als eerste moeten de modules cv 
 \item{output = ARcode.getFoundMarker(0)} Deze functie geeft de informatie van de gevonden marker. Het getal dat je meegeeft is het nummer van de marker waar je de informatie van opvraagd. Dit getal mag niet groter zijn dan `returnint' dan crasht de applicatie gegarandeerd. met output.ID, output.x en output.y kan je de ID van de gevonden marker en de x en y positie in het gegeven plaatje van het midden van de marker vinden.
 \end{itemize}
 
-\begin{Exercise}
-Maak zelf wat plaatjes met 1 of meer AR codes erin en test hoe robuust de AR codes gevonden kunnen worden, hoeveel maakt het uit als je ze bekijkt onder verschillende hoeken? Hoe maak je het opvragen van de gevonden AR codes veilig (dat hij niet crasht?). 
-\end{Exercise}
-\vspace{10 mm}
-
 \section{Omgaan met de markers}
 
 Nu kan je makkelijk AR markers vinden in plaatjes, dit maakt de computer vision op de Nao een stuk makkelijker! Het enige wat je nu nog nodig hebt is een vertaalstap van de x,y waardes in het plaatje naar de x,y waardes in de echte wereld.. Dit is natuurlijk nodig om de Nao naar de marker toe te laten lopen. Hiervoor hebben we de functie tools.calcPosition(x\_in\_image,y\_in\_image) in de tools module. Dit is een slimme functie die met behulp van de hoogte informatie van de nao, en de informatie dat de AR code op de grond ligt (!) berekent wat de echte x,y afstand is met als input de x en y waardes uit het plaatje. De functie neemt ook de draaiïng van het hoofd van de Nao mee, dus als de Nao zijn hoofd draait naar een marker dan is de output (x,y) nog steeds precies wat de Nao hoort te lopen om op de marker te komen (jammer genoeg loopt hij nog steeds niet zo heel accuraat).
 
 \begin{Exercise}
 \begin{itemize}
-\item Schrijf nu een functie in een nieuwe dag 3 module waar je een plaatje van de Nao aan mee kan geven, en een lijst met informatie over alle markers teruggeeft. (bijvoorbeeld [(x\_1,y\_1,ID\_1), (x\_1,y\_1,ID\_1)]).
+\item Schrijf nu een functie in een nieuwe dag 3 module waar je een plaatje van de Nao aan mee kan geven, en een lijst met informatie over alle markers teruggeeft. (bijvoorbeeld [(x\_1,y\_1,ID\_1), (x\_2,y\_2,ID\_2)]).
 \item Schrijf een functie die het hoofd van de Nao laat draaien naar een marker (input (x\_1,y\_1,ID\_1))
 \item Schrijf een functie die een Nao op een marker af laat lopen.
 \item Voeg alle ID markers op nummer toe aan de representatie van het doolhof. Of controleer of we dit al gedaan hebben
