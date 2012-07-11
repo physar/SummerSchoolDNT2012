@@ -2,7 +2,7 @@ import sys
 import math
 import bisect
 
-class aStar:
+class aStar_v1:
     def setDependencies(self, modules):
         pass
     
@@ -12,24 +12,33 @@ class aStar:
         Input:
             - start         : start-position(x,y)
             - end           : end-position (x,y)
-            - validMoves    : dictionary with valid-mocves
+            - validMoves    : dictionary with valid-moves
+                              each key is a node in the maze
+                              each value is a list of nodes that can be reached
         Output:
-            - list with path [(x1,y1), (x2,y2), ..., (xn,yn)]
+            - The shortest path from 'start' to 'end' [(x1,y1), (x2,y2), ..., (xn,yn)]
+            
+        Tip:
+            - Keep track of all the nodes that already have been visited.
         '''
         pass
     
     # expand the path with a neighbour
-    def getNewPaths(self, estimatedCost, costSoFar, path, lastNode, end, neighbours):
+    def expandPath(self, estimatedCost, costSoFar, path, lastNode, end, neighbours):
         '''
         Input:
-            - estimatedCost : cost to reach end
+            - estimatedCost : cost made sofar + estimated cost to reach 'end'
             - costSoFar     : cost made sofar
-            - path          : List of paths walked sofar [path1, path2, ..., pathn]
-            - lastNode      : node of current position (x,y)
+            - path          : List of nodes visited sofar [(x1,y1), (x2,y2), ..., (xn,yn)]
+            - lastNode      : last node in 'path' (x,y)
             - end           : goal position (x,y)
             - neighbours    : list with neighbours of current node [(x,y), (x,y), ..., (x,y)]
         Output:
-            - List of paths, extended with current node.
+            - List of paths that are extentions of 'path'.
+            
+        Tip:
+            - Make sure that you first clone 'path' before you extend it with a neighbour.
+              You can clone a list with the function list/1. For example: cloneList = list(originalList)
         '''
         pass
 
@@ -50,7 +59,7 @@ class aStar:
         Input:
             - path          : a path (a list of tuples)
             - end           : goal-position
-        Return:
+        Output:
             - True if path has reached its goal, False otherwise
         '''
         pass
@@ -59,15 +68,29 @@ class aStar:
     def getCost(self, node1, node2):
         '''
         Input:
-            - node1         : a node (startnode)
-            - node2         : a node (endnode) 
+            - node1         : a node (x1,y1)
+            - node2         : a node (x2,y2) 
         Output:
-            - cost to get from node 'node1' to 'node2'
+            - Estimated cost to get from node 'node1' to 'node2'
         '''
         pass
     
     #OPTIONAL:
     # Insert the new paths into the priority queue
     def addToQueue(self, queue, newPaths):
+        '''
+        Input:
+            - queue     : A list containing Tuples or Lists sorted in ascending order
+                          by the first value of each Tuple/List.
+            - newPaths  : List that contains the same datatypes as 'queue' (Tuples or Lists).
+        Output:
+            - None. (The queue passed to this function will be edited.)
+            
+        Each path in 'newPaths' is inserted into 'queue' according to its first element.
+        A path could be represented as (e_1, ..., e_n). Where 'e_1' is the total estimated 
+        cost of this path and 'e_n' is the list of nodes visited sofar.
+        This path will be inserted into 'queue' according to the value of 'e_1'.
+        '''
         for path in newPaths:
             bisect.insort(queue, path)
+            
