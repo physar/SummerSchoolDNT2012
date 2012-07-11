@@ -1,6 +1,6 @@
 import math
 
-class aStar:
+class aStar_v1:
     def setDependencies(self, modules):
         pass
     
