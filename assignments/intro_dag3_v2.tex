@@ -37,8 +37,8 @@ Deze router is voor de mensen, zittend het dichts bij de glazen wand
 \section{Opdrachten}
 Voor deze opdracht is het de bedoeling om een padplanner gebasseerd op het A* algoritme te maken\footnote{Zie wikipedia voor een beschrijvin van het algorithme en pseudo-code: \url{http://en.wikipedia.org/wiki/A*_search_algorithm}}.Met dit algoritme kan je de Nao straks met behulp van een kaart in \'e\'en keer met het kortste pad door het doolhof heen laten lopen. Voor deze opdracht hebben we verschillende moeilijkheidsgraden gemaakt:
 
-\subsection{De moeilijkheidsgraden}
-Hieronder een beschrijving van de \textit{Doom}-moeilijkheidsgraden. Een beschrijving van beschikbare functies (map inladen, visualizatie) kun je vinden in de volgende sectie.
+\subsection{\textit{Doom}-scenarios a.k.a moeilijkheidsgraden}
+Hieronder een beschrijving van de \textit{Doom}-scenarios. Een beschrijving van beschikbare functies (map inladen, visualizatie) kun je vinden in de volgende sectie.
 
 \subsubsection{Hurt me plenty}
 Implementeer geheel zelf een padplanner met behulp van A*. Redeneer hierbij voor je begint te programmeren zorvuldig over de volgende aspecten:
@@ -69,7 +69,7 @@ bisect.insort(queue, newPath)
 \end{verbatim}
 \noindent \line(1,0){100}
 \\\\
-Het is hierbij van belang hoe \textit{newPath} gerepresenteerd wordt. Als \textit{newPath} een Tuple is dan zal het toegevoegd worden aan de hand van het eerste argument in de Tuple; bij een Array aan de hand van het eerste argument in de Array. Het is daarom van belang dat de geschatte totale kosten van een pad het eerste argument is in het gekozen datatype. 
+Het is hierbij van belang hoe \textit{newPath} gerepresenteerd wordt. Als \textit{newPath} een Tuple is dan zal het toegevoegd worden aan de hand van het eerste argument in de Tuple; bij een List aan de hand van het eerste argument in de List. Het is daarom van belang dat de geschatte totale kosten van een pad het eerste argument is in het gekozen datatype. 
 
 \subsection{De map en visualizatie.}
 Om een map in te laden, en voor debugging staan in het framework 2 extra modules:
@@ -88,9 +88,12 @@ De mazeparser beschikt over 2 functies:
 \end{itemize}
 
 \subsubsection{visualizer\_v1.py}
-De visualizer bevat slechts 1 functie: \\
-\textit{visualize(edges, path, scale=(100,100), offset=(100,100))}\\
-Hierin is \textit{edges} de dictionary van edges die bij de \textit{maxeparser} wordt terug gegeven. \textit{path} is een lijst van coordinaten waar het pad doorheen loopt. De \textit{scale} en \textit{offset} functies zijn ervoor om de grafische output op te schalen.
+De visualizer bevat 2 functies: \\
+\begin{itemize}
+\item \textit{init()} - Deze functie initializeert de visualizer en moet daarom direct na de \textit{start()}-functie van je main-module worden aangeroepen.
+\item \textit{visualize(edges, path, update, start, end, scale=(100,100), offset=(100,100)))}\\ Hierin is \textit{edges} de dictionary van edges die bij de \textit{maxeparser} wordt terug gegeven. \textit{path} is een lijst van coordinaten waar het pad doorheen loopt.\textit{update} is \textit{True} of \textit{False} en is een parameter die aan geeft of meerdere updates volgens (bijvoorbeeld een update van een pad moet worden laten zien. De \textit{start} en \textit{end} parameteres zijn de begin en eind (goal) posities die de robot heeft. De \textit{scale} en \textit{offset} functies zijn ervoor om de grafische output op te schalen.
+\end{itemize}
 
-
+Om je A*-algoritme te debuggen, is het handig om steeds je huidige beste pad te printen. Dit is met de 2e functie van de \textit{visualizer}-module te doen. Om dit te kunnen doen moet je zorgen dat je A*-module de \textit{visualizer}-module mee neemt in zijn \textit{setDependencies}. Je kunt nu, door de update-parameter als \textit{True} mee te geven, in elke iteratie van het algoritme het huidige pad laten zien. Door in het venster want zal ontstaan op `c' te drukken, gaat je algoritme een stap verder (het aanroepen van de visualizer is een ``blocking"-call). 
+Om het systeem netjes af te sluiten, moet je in je main, nadat je path-plan algoritme een optimaal pad heeft gevonden, een laatste maal de visualizer aanroepen met de \textit{update}-parameter op \textit{False}.
 \end{document}
