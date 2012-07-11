@@ -12,6 +12,9 @@
 import sys
 
 class mazeParser:
+    def setDependencies(self, modules):
+        pass
+        
     def parseMaze(self, filename="./maze.txt"):
         """
         parseMaze(filename) -> dict Edges.

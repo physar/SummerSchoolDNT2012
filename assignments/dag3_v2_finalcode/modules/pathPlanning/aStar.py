@@ -4,13 +4,16 @@ import bisect
 
 class aStar:
     def setDependencies(self, modules):
-        pass
+        self.visu = modules.getModule("visualization")
         
-    def findShortestPath(self, start, end, validMoves):
+    def findShortestPath(self, start, end, validMoves, edges):
         seen = set([]) # unordered collection of distinct hashable objects
         pathQueue = [(self.getCost(start, end), 0, [start])] # initialize pathQueue
         while not self.finished(pathQueue[0], end):
             (estimatedCost, costSoFar, currentPath) = pathQueue.pop(0)  # pop from queue
+            
+            self.visu.visualize(edges, currentPath, seen, start, end)
+            
             lastNode = currentPath[len(currentPath)-1]
             seen.add(lastNode)
             neighbors = self.getUnseenNeighbors(seen, validMoves[lastNode])
@@ -18,7 +21,9 @@ class aStar:
                 continue
             newPaths = self.getNewPaths(estimatedCost, costSoFar, currentPath, lastNode, end, neighbors) # extend path
             self.addToQueue(pathQueue, newPaths) # add to queue        
-        
+            
+
+        self.visu.visualize(edges, pathQueue[0][2], seen, start, end)
         return pathQueue[0]
 
     # expand the path with a neighbor
