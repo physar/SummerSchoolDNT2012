@@ -1,6 +1,6 @@
 import cv, cv2, math, numpy
 
-class vision_Dag2():    
+class visionDag4():    
     globals = None
 
     def setDependencies(self, modules):
@@ -244,7 +244,7 @@ class vision_Dag2():
         
     #for when we want to find shit on the ground   
     def calcPosition(self,coord, cam, headInfo):
-        (width, height) = size
+        (width, height) = (320,240)
         #print 'size: ', width, ', ', height
         # coord with origin in the upperleft corner of the image
         (xCoord, yCoord) = coord
@@ -258,9 +258,9 @@ class vision_Dag2():
         radiusPerPixelWidth = 0.003325
         xAngle = (xCoord +0.5) * radiusPerPixelWidth    
         yAngle = (yCoord+ 0.5) * radiusPerPixelHeight
-        if -1 < xAngle < 1 and -1 < yAngle < 1:
-            yAngle = -0.47 - headInfo[0] if yAngle + headInfo[0] < -0.47 else yAngle
-            motion.changeAngles(['HeadPitch', 'HeadYaw'], [0.1*yAngle, 0.1*xAngle], 0.7)  # 0.3*angles for smoother movements, optional. Smoothinggg. 
+        #if -1 < xAngle < 1 and -1 < yAngle < 1:
+         #   yAngle = -0.47 - headInfo[0] if yAngle + headInfo[0] < -0.47 else yAngle
+          #  motion.changeAngles(['HeadPitch', 'HeadYaw'], [0.1*yAngle, 0.1*xAngle], 0.7)  # 0.3*angles for smoother movements, optional. Smoothinggg. 
             #motion.changeAngles(['HeadPitch', 'HeadYaw'], [0.3*yAngle, 0.3*xAngle], 0.7)  # 0.3*angles for smoother movements, optional. Smoothinggg. 
 
         #print 'angle from camera: ' + str(xAngle) + ', ' + str(yAngle)
@@ -276,13 +276,13 @@ class vision_Dag2():
         # origin with position and rotation of camera
         #ballRadius = 0.0325     # in meters
         ballRadius = 0.065
-        xPos = (z) / tan(pitch + yAngle)
-        yPos = tan(xAngle) * xPos
+        xPos = (z-ballRadius) / math.tan(pitch + yAngle)
+        yPos = math.tan(xAngle) * xPos
         #print 'position from camera: ', xPos, ', ', yPos
         # position of the ball where
         #  origin with position of camera and rotation of body 
-        xPos = cos(yaw)*xPos + -sin(yaw)*yPos
-        yPos = sin(yaw)*xPos +  cos(yaw)*yPos
+        xPos = math.cos(yaw)*xPos + -math.sin(yaw)*yPos
+        yPos = math.sin(yaw)*xPos +  math.cos(yaw)*yPos
         # position of the ball where
         #  origin with position and rotation of body
         xPos += x
