@@ -4,7 +4,7 @@ import numpy as np
 import ARimport as ar
 
 
-class ARCall():
+class getARCode():
     global ARcode
     ARcode = ar.ARimport()
     globals = None

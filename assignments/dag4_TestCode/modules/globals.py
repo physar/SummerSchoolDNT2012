@@ -1,7 +1,7 @@
 from naoqi import ALProxy
 
 class globals:
-    ipadress = "192.168.1.70"
+    ipadress = "192.168.1.71"
     
     def setDependencies(self, modules):
         pass

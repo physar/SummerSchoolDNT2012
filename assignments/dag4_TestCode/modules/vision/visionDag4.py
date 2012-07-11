@@ -275,7 +275,7 @@ class visionDag4():
         # position of the ball where
         # origin with position and rotation of camera
         #ballRadius = 0.0325     # in meters
-        ballRadius = 0.065
+        ballRadius = 0
         xPos = (z-ballRadius) / math.tan(pitch + yAngle)
         yPos = math.tan(xAngle) * xPos
         #print 'position from camera: ', xPos, ', ', yPos
