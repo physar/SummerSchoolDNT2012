@@ -1,9 +1,10 @@
-import pygame, time
-white = (255,255,255)
-black = (  0,  0,  0)
-red   = (255,  0,  0)
-green = (  0, 255, 0)
+import pygame, time, sys
 
+white = (255, 255, 255)
+black = (  0,   0,   0)
+red   = (255,   0,   0)
+green = (  0, 255,   0)
+blue  = (  0,   0, 255) 
 class visualization_v1:
     def setDependencies(self, modules):
         pass
@@ -11,8 +12,11 @@ class visualization_v1:
     def init(self):
         pygame.init()
         self.screen = pygame.display.set_mode((640,480))
+        
+    def stop(self):
+        pygame.quit()
 
-    def visualize(self, edges, path, update, start, end, scale=(100,100), offset=(100,100)):
+    def visualize(self, edges, path, seen, start, end, scale=(100,100), offset=(100,100)):
         #reset canvas
         self.screen.fill(white)
         pathPoints = []
@@ -22,6 +26,11 @@ class visualization_v1:
             pathPoints.append((node[0]*scale[0]+offset[0], node[1]*scale[1]+offset[1]))
         if (len(pathPoints) > 1):
             pygame.draw.lines(self.screen, black, False, pathPoints, 3)
+        
+        #draw seen nodes
+        pathPoints = []
+        for node in seen:
+            pygame.draw.circle(self.screen, blue, (node[0]*scale[0]+offset[0], node[1]*scale[1]+offset[1]), 5, 2)
         
         #draw start + end point
         pygame.draw.circle(self.screen, green, (start[0]*scale[0]+offset[0], start[1]*scale[1]+offset[1]), 5, 2)
@@ -45,10 +54,8 @@ class visualization_v1:
         while loop:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    loop = False
+                    pygame.quit()
+                    sys.exit()
                 
-                if (update == True) and (event.type == pygame.KEYDOWN and event.unicode == 'c'):
+                if event.type == pygame.KEYDOWN and event.unicode == 'c':
                     loop = False
-
-        if (update == False):
-            pygame.quit()

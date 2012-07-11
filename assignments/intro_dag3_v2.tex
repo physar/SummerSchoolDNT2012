@@ -56,9 +56,6 @@ Maak bijvoorbeeld aparte functies die controleren of het doel is bereikt, wat de
 \subsubsection{Hey, not too rough}
 In het \textit{Hey, not too rough}-framework zijn alle functies voor gedefinieerd en worden er tips gegeven over hoe je deze functies moet implementeren.
 
-\subsubsection{I'am to young to die}
-Om je goed op weg te helpen is in dit framework nog meer voor je ingevuld. In dit framework houd je je alleen bezig met de meest essenti\"ele functies van A* zodat je alsnog inzicht krijgt in hoe het algoritme werkt. In de code kun je tips en instructies vinden voor de uitwerking van de opdracht.
-
 \subsection{A* Tips}
 A* houdt een priority queue bij van de mogelijke incomplete paden in het doolhof. Deze zijn gesorteerd op de geschatte totale kosten om via elk pad het eindpunt te bereiken. Het pad met de laagste geschatte kosten heeft de hoogste prioriteit en staat vooraan in de priority queue. Als een pad wordt uitgebreid ontstaan er nieuwe paden die in de queue geplaatst moeten worden aan de hand van hun geschatte kosten. De library \textit{bisect} \footnote{Documentatie over \textit{bisect} op: \url{http://docs.python.org/library/bisect.html}.} kan gebruikt worden om een nieuw pad op de juiste plaats toe te voegen in de priority queue:\\
 \noindent \line(1,0){100}
@@ -88,12 +85,12 @@ De mazeparser beschikt over 2 functies:
 \end{itemize}
 
 \subsubsection{visualizer\_v1.py}
-De visualizer bevat 2 functies: \\
+De visualizer bevat 3 functies: \\
 \begin{itemize}
 \item \textit{init()} - Deze functie initializeert de visualizer en moet daarom direct na de \textit{start()}-functie van je main-module worden aangeroepen.
-\item \textit{visualize(edges, path, update, start, end, scale=(100,100), offset=(100,100)))}\\ Hierin is \textit{edges} de dictionary van edges die bij de \textit{maxeparser} wordt terug gegeven. \textit{path} is een lijst van coordinaten waar het pad doorheen loopt.\textit{update} is \textit{True} of \textit{False} en is een parameter die aan geeft of meerdere updates volgens (bijvoorbeeld een update van een pad moet worden laten zien. De \textit{start} en \textit{end} parameteres zijn de begin en eind (goal) posities die de robot heeft. De \textit{scale} en \textit{offset} functies zijn ervoor om de grafische output op te schalen.
+\item \textit{stop()} - Voordat de \textit{start()}-functie is afgelopen, moet deze functie worden aangeroepen. Het zorgt ervoor dat de visualizer netjes afsluit.
+\item \textit{visualize(edges, path, seen, start, end, scale=(100,100), offset=(100,100)))}\\ Hierin is \textit{edges} de dictionary van edges die bij de \textit{maxeparser} wordt terug gegeven. \textit{path} is een lijst van coordinaten waar het pad doorheen loopt.\textit{seen} is een lijst met nodes die al zijn bezocht. De \textit{start} en \textit{end} parameters zijn de begin en eind (goal) posities die de robot heeft. De \textit{scale} en \textit{offset} functies zijn ervoor om de grafische output op te schalen.
 \end{itemize}
 
-Om je A*-algoritme te debuggen, is het handig om steeds je huidige beste pad te printen. Dit is met de 2e functie van de \textit{visualizer}-module te doen. Om dit te kunnen doen moet je zorgen dat je A*-module de \textit{visualizer}-module mee neemt in zijn \textit{setDependencies}. Je kunt nu, door de update-parameter als \textit{True} mee te geven, in elke iteratie van het algoritme het huidige pad laten zien. Door in het venster want zal ontstaan op `c' te drukken, gaat je algoritme een stap verder (het aanroepen van de visualizer is een ``blocking"-call). 
-Om het systeem netjes af te sluiten, moet je in je main, nadat je path-plan algoritme een optimaal pad heeft gevonden, een laatste maal de visualizer aanroepen met de \textit{update}-parameter op \textit{False}.
+Om je A*-algoritme te debuggen, is het handig om steeds je huidige beste pad te printen. Dit is met de 3e functie van de \textit{visualizer}-module te doen. Om dit te kunnen doen moet je zorgen dat je A*-module de \textit{visualizer}-module mee neemt in zijn \textit{setDependencies}. Je kunt nu, door de \textit{visualize}-functie aan te roepen, in elke iteratie van het algoritme het huidige pad laten zien. Door in het venster  op `c' te drukken, gaat je algoritme een stap verder (het aanroepen van de visualizer is een ``blocking"-call).
 \end{document}
