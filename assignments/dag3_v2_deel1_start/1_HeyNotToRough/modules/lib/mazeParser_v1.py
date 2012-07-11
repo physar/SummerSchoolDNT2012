@@ -10,11 +10,10 @@
 # .-.-.-. .
 
 import sys
-
-class mazeParser:
+class mazeParser_v1:
     def setDependencies(self, modules):
         pass
-        
+
     def parseMaze(self, filename="./maze.txt"):
         """
         parseMaze(filename) -> dict Edges.
@@ -61,8 +60,6 @@ class mazeParser:
             if start == 1:
                 y += 1
                 
-        print "e:", edges
-        print "v:", validMoves
         return edges, validMoves
                     
     def addEdge(self, edgeDict, node1, node2):
@@ -81,11 +78,11 @@ class mazeParser:
         else:
             edgeDict[node2] = [node1]
             
-    def prettyPrint(self, edges, qrpos):
+    def prettyPrint(self, edges):
         """
-        prettyPrint(dict edges, dict qrpositions)
+        prettyPrint(dict edges)
         
-        Prints the maze and qr points in a fashionable way.
+        Prints the maze in a fashionable way.
         """
         max_x, max_y = max(edges.keys())
         print max_x, max_y
@@ -99,7 +96,7 @@ class mazeParser:
                     sys.stdout.write('\n')      
                 sys.stdout.write('  .')                    
                 for x in range(max_x):
-                    if (x+1, y/2) in edges[(x,y/2)]:
+                    if ((x,y/2) in edges) and ((x+1, y/2) in edges[(x,y/2)]):
                         sys.stdout.write('-')
                     else:
                         sys.stdout.write(' ')
@@ -108,25 +105,9 @@ class mazeParser:
             else:      
                 sys.stdout.write(str(y/2) + " ")
                 for x in range(max_x + 1):
-                    if (x, y/2+1) in edges[(x,y/2)]:
+                    if ((x,y/2) in edges) and ((x, y/2+1) in edges[(x,y/2)]):
                         sys.stdout.write('|')
                     else:
                         sys.stdout.write(' ')
-                    if (x,y/2) in qrpos:
-                        sys.stdout.write(str(qrpos[(x,y/2)]))
-                    else:
-                        sys.stdout.write(' ')
+                    sys.stdout.write(' ')
                 print ''
-                    
-if __name__ == "__main__":
-    parser = mazeParser()
-    edges, validMoves = parser.parseMaze()
-    for move in validMoves:
-        print move, ":\t", validMoves[move]
-    print validMoves
-    
-    
-    #for edge in edges:
-    #    print edge, edges[edge]
-    #print '\n', qrpos
-    parser.prettyPrint(edges, {1})
