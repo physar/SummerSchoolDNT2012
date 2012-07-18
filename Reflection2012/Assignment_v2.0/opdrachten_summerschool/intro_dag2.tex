@@ -1,0 +1,183 @@
+\documentclass[a4paper]{article}
+
+\usepackage{hyperref}
+
+\title{\textbf{Robotics Summerschool Juli 2012} \\ Opdrachten Dag 2}
+\author{Dutch Nao Team - \url{http://dutchnaoteam.nl}}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Introductie}
+Welkom bij de Summerschool Robotics.\\
+\\
+De code voor deze opdracht kun je downloaden onder het ``Dag 2" van de site:\\ 
+\url{http://ducthnaoteam.nl/summerschool/}\\
+\\
+Unzip de code in de map \textit{SummerschoolRobotics2012} op je desktop. Je kunt nu beginnen met de tweede opdracht van deze summerschool. \\
+\\
+veel plezier en succes!\\
+\\
+Het Dutch Nao Team.\\
+\\
+\textbf{Wireless informatie:}\\
+Router:  Dutch Nao Team Robolab\\
+Wachtwoord: DnT10RuleS\\
+Deze router is voor de mensen, zittend het dichts bij de lift.\\
+\\
+Router:  Dutch Nao Team NAO\\
+Wachtwoord: sam+moos\\
+Deze router is voor de mensen, zittend het dichts bij de glazen wand
+
+\tableofcontents
+
+\newpage
+
+\section{Opdrachten}
+Voor de vision opdrachten maken we gebruik van Open CV \footnote{Voor documentaties, zie: \\ \url{http://opencv.willowgarage.com/documentation/python/index.html}}. Dit is een Computer Vision library die door meerdere programmeertalen kan worden gebruikt voor beeld verwerking.
+
+\subsection{De framework update}
+Om de robot de weg te laten vinden, moet deze gebruik maken van zijn camera. Een Nao heeft 2 camera's in zijn hoofd zitten: \'e\'en in zijn mond en \'e\'en in zijn voorhoofd. Wij zullen enkel de camera in de mond gebruiken.
+
+Net als bij motions wordt de camera ook via een proxy aangeroepen. Door \textit{self.vidProxy = ALProxy( ``ALVideoDevice", self.ipadres, 9559 )} toe te voegen aan de \textit{setProxies()} functie krijgen we de mogelijkheid om te camera uit te lezen. Voordat we een foto kunnen maken moeten er nog enkele camera parameters worden ingesteld. Dit wordt gedaan door de \textit{cSubscribe()} functie in de \textit{tools}-module.
+
+Vergeet niet, voordat je verder gaat, het juiste ip-adres van de robot door te geven aan de globals-module.
+
+\subsection{Blob detectie}
+De eerste stap in het navigeren door ons doolhof is het vinden van een blob: een gebied in een plaatje dat \'e\'en bepaalde kleur heeft. In de komende secties zul je je eigen blob-vinder maken.
+
+\subsubsection{Een foto maken en opslaan}
+Met behulp van de \textit{getSnapShot()} functie in de tools-module kun je een foto maken met de onderste camera van de robot. Deze functie geeft naast de foto ook extra gegevens terug over de positie van het hoofd. Het eerste argument van de geretourneerde waarde van \textit{getSnapShot()} is het plaatje.
+
+Een gemaakt plaatje kan ook worden opgeslagen. Dit wordt gedaan door de functie \textit{saveImage(name, img)} aan te roepen in de tools-module. Hierin is \textit{name} de bestandsnaam (een string dus) van het plaatje inclusief de bestands-extensie (png of jpg). \textit{img} is het plaatje zelf.
+
+Maak een plaatje en sla dit op. Het opgeslagen bestand kun je vinden in de zelfde map als waar je \textit{config.py}-bestand staat.
+
+Wanneer je het plaatje opent, zul je zien dat de kleuren niet kloppen. Dit klopt, wij gebruiken namelijk de HSV-kleuren\footnote{Meer informatie over HSV kun je vinden op: \\ \url{http://nl.wikipedia.org/wiki/HSV_(kleurruimte)} } representatie in plaats van de wat bekendere RGB-representatie. Zoek deze representatie op op wikipedia zodat je begrijpt wat de componenten Hue, Saturation en Value zijn.
+
+\subsubsection{Image filtering}
+Een volgende stap in het proces is het filteren van een kleur. Hiervoor moet een functie worden gemaakt die een snapshot en enkele kleur-parameters meekrijgt en een gefilterd zwart/wit plaatje terug geeft. In dit gefilterde (binaire) plaatje staan witte pixels voor pixels welke in de meegegeven foto voldoen aan onze kleur-eisen en zwarte pixels staan voor pixels die hier niet aan voldoen.
+
+Voordat code kan worden geschreven moet een module worden gemaakt waar straks de code in komt te staan (de \textit{vision}-module). Deze module kun je vinden in de map \textit{vision}. De module is aangemaakt, maar wordt nog niet ingeladen (zie \textit{config.py}). De \emph{main}-module heeft de \textit{vision} module nodig, pas daarom ook \textit{setDependencies} aan in de \emph{main}-module.
+Zoals je kan zien importeert de \textit{vision} module verschillende libraries, onder ander \textit{cv} en \textit{cv2}, dit zijn de gebruikte OpenCV bestanden.
+
+De eerste functie die in \textit{vision}-module moet worden geimplementeerd is de \textit{filterImage(self, img, minHSV, maxHSV)}-functie.
+Als input krijgt het een plaatje mee en twee lijsten met elk 3 waardes (minimum en maximum waardes van de Hue, Saturation en Value van een kleur). Pixels in het plaatje die binnen deze kleur-grenzen vallen zijn pixels waarin we interesse in hebben. Dit is te vergelijken met bijvoorbeeld een beschrijving van elke kleur die minimaal lichtblauw is en maximaal donkerblauw. Op deze manier kunnen we alle blauwe kleuren markeren en daarmee vinden we de pixels die voor ons interessant zijn.
+Om OpenCV te kunnen laten werken met de kleur-definities moeten we de lijsten met HSV-waardes omzetten in een Scaler (constante waarde):
+
+\noindent \line(1,0){100}
+\begin{verbatim}
+minScaler = cv.Scaler(minHSV[0], minHSV[1], minHSV[2], 0)
+\end{verbatim}
+\noindent \line(1,0){100}
+\\\\
+Het omzetten moet voor beide lijsten (\textit{minHSV} en \textit{maxHSV}) worden gedaan. Het eerste argument, \textit{minHSV[0]} is de Hue-waarde van de ondergrens van de gewenste kleur. Het tweede argument, \textit{minHSV[1]}, is de Saturation en het derde, \textit{minHSV[2]}, de Value. Het omzetten van de lijst van \textit{maxHSV}-waardes gebeurt op eenzelfde manier.
+
+Uiteindelijk zal onze filter-functie een nieuw plaatje terug geven. Om dit te kunnen doen moet geheugen worden vrijgemaakt:
+
+\noindent \line(1,0){100}
+\begin{verbatim}
+resultImg = cv.CreateImage(size, cv.IPL_DEPTH_8U, 1)
+\end{verbatim}
+\noindent \line(1,0){100}
+\\\\
+Hierin is \textit{size} gelijk aan \textit{(320,240)}, de grootte van de gemaakte foto. \textit{cv.IPL\_DEPTH\_8U} geeft aan dat elke pixel uit het plaatje een 8-bit unsigned waarde heeft (integers tussen 0 en 255. Het aantal dimensies (kleuren) van het plaatje is 1: een pixel is enkel zwart of wit.
+
+We kunnen nu OpenCV gebruiken om een `raw' zwart-wit plaatje te maken van de kleuren in onze foto:
+
+\noindent \line(1,0){100}
+\begin{verbatim}
+cv.InRangeS(img, minScaler, maxScaler, resultImg)
+\end{verbatim}
+\noindent \line(1,0){100}
+\\\\
+Onze filter creert nu al een resultaat. Return het resultaat en roep de functie vanuit de \textit{main}-module aan met een kleur naar keuze (zie voor HSV-waarders het whiteboard). 
+Het resultaat kunnen we als een plaatje opslaan met behulp van de eerder genoemde \textit{SaveImage}-functie. Zorg evoor dat het resultaat van de filter-functie wordt opgeslagen. Sla dan al je code op, test het, los eventuele errors op en bekijk het resultaat.
+
+Hoogst waarschijnlijk zul je vele witte vlekken zien in plaatje. Dit is meestal ruis en komt door de kwaliteit van de camera en mogelijk kleuren in ed achtergrond. Om dit weg te halen moeten we het plaatje ``smoothen": de overgang tussen zwart/wit maken we minder `hard'. Voor elke pixel kijk je naar zijn buren, als er meer witte dan zwarte buren zijn zet de functie de pixel op wit, en anders op zwart. Random witte pixels zullen daardoor een zwarte kleur krijgen en dus wegvallen. De volgende functie doet dit: \textit{cv.Smooth(resultImg, resultImg, cv.CV\_MEDIAN, 1)}. \textit{cv.CV\_MEDIAN} geeft het type ``smoothing" aan en het getal hoeveel naastelkaar gelegen pixels steeds worden gebruikt per berekening. Voeg deze functie toe in je filter-functie en pas je return aan zodat het gesmoothte plaatje terug wordt gegeven. 
+Run je code en test een paar verschillende waardes om te bepalen welk getal het beste resultaat geeft\footnote{Op \url{http://opencv.willowgarage.com/documentation/python/image_filtering.html\#smooth} kun je meer vinden over de mogelijke opties van smoothing.}.
+
+De filter functie heeft nog 1 toevoeging nodig: het plaatje moet worden omgezet in een ander formaat zodat andere functies straks verdere bewerkingen kunnen doen. Het omzetten wordt gedaan met het commando: \textit{resultImg = cv.GetMat(resultImg)}. Voeg deze optie toe en test je code op fouten.
+
+\subsubsection{Hough Circels}
+Nu we een gefilterd plaatje krijgen, kunnen we proberen cirkels te zoeken. Hiervoor is een nieuwe functie nodig in onze vision-module. Deze functie heeft (naast \textit{self}) slechts 1 argument: een binair plaatje (\textit{findCircle(self, img)}
+
+Cirkel detectie doen we doormiddel van een speciaal algorithme: de Hough-transform\footnote{voor meer info check: \url{http://en.wikipedia.org/wiki/Hough_transform}}. Dit algorithme komt met OpenCV geleverd. Om de Hough-transform te kunnen toepassen moet het gegeven plaatje worden omgezet in een array via \textit{numpy} (een python module): \textit{img = numpy.asarray(img)}. De library is (zoals je kan zien) al geimporteerd bovenaan het begin van de vision-klasse.
+
+Na het vekrijgen van een plaatje, moet de functie de Hough-transform toepassen. Hier komen echter veel verschillende parameters bij kijken. Om ervoor te zorgen dat je niet te veel tijd kwijt bent aan het tweaken hiervan geven wij je de ``juiste" parameters:
+
+\noindent \line(1,0){100}
+\begin{verbatim}
+dp = 2
+minD =120
+p1 = 255
+p2 = 27
+minS = 8
+maxS = 300
+circles = cv2.HoughCircles(img, cv.CV_HOUGH_GRADIENT, dp, minD, None, p1, p2, minS, maxS)
+\end{verbatim}
+\noindent \line(1,0){100}
+\\\\
+\textit{dp} geeft aan hoe nauwkeurig moet worden gezocht (in ons geval om de 2 pixels), \textit{minD} geeft aan hoeveel pixels minimaal tussen 2 blobs moet zitten, \textit{p1} en \textit{p2} zijn parameters voor een dieper-liggend proces en \textit{minS} en \textit{maxS} geeft aan wat de minimale, danwel de maximale grote van een blob is in pixels.
+De output is een lijst met daarin data over de gevonden cirkels (aantal, radius, pixel-center), of \textit{None} indien niks gevonden is.
+
+Sla je code op en test de \textit{HoughCircles} functie. Print het resultaat van de aanroep in de Command Prompt. 
+
+Aan de hand van de geprinte data, kun je nu een systeem maken welke \textit{None} terug geeft als geen cirkel is gevonden of een lijst met coordinaten als er wel cirkels zijn gevonden.
+
+\begin{itemize}
+\item Tip: De \textit{HoughCircles}-functie kan meerdere cirkels terug geven. \textit{len(circles[0])} geeft je het aantal gevonden cirkels. De straal en centrum (x en y) van de $i${de} cirkel van de lijst is te vinden met respectievelijk \textit{circles[0][i][2]}, \textit{circles[0][i][0]}, \textit{circles[0][i][1]}
+\item Tip: Met behulp van het commando: \textit{cv.Circle(img, center, radius, (0, 0, 255), 3, 8, 0)} kun je een cirkel met centrum \textit{center} en straal \textit{radius} teken op het plaatje img. Wanneer je het plaatje opslaat kun je visueel zien waar het algorithme denkt dat de blobs zitten.
+\end{itemize}
+
+\subsubsection{Meerdere blobs}
+Nu we blobs kunnen herkennen en berekenen waar ze in een plaatje zitten, kunnen we meerdere blobs combineren.
+
+Hiervoor is een functie nodig (in de vision-module, \textit{getBlobsData(self, img)}) die een plaatje inlaad (geven door de main-module, via \textit{getSnapshot()}), die voor elke kleur blob detectie doet en vervolgens zoekt  naar Hough-Circles. De functie moet 2 outputs geven, de eerste is het aantal gevonden blobs, de tweede is een lijst met daarin de co\"ordinaten (op volgorde) van de paarse, blauwe en oranje blob. Als er geen co\"ordinaten van een blob zijn gevonden dan staat er \textit{None} op deze plek. 
+
+Het is belangrijk dat je gedurende het programma steeds dezelfde volgorde van blobs aanhoud in je lijst: \textit{[paars, blauw, oranje]}. Test je code zorgvuldig zodat je weet dat dit het geval is.
+
+\subsection{Landmark Detectie}
+Gefeliciteerd, als je hier ben aangekomen zul je een werkende vision module hebben die blobs kan vinden.
+
+\subsubsection{Stoppen...}
+De volgens stap is de mapping van de gevonden blobs naar een landmark en de berekening van de afstand en de hoek tot de landmark. Deze waardes gebruiken we om op de ``perfecte" plek te komen voor de landmark, zodat we netjes naar links of rechts kunnen draaien.
+
+We beginnen met het berekenen van de afstand tot de landmark: je wilt de robot naar een landmark toe laten lopen en stoppen zodra hij op een bepaalde afstand van de landmark staat. Dit is simpel te doen door de afstand tussen de verschillende blobs te berekenen. Zoals je bij de vorige opdracht gezien hebt is het vision-systeem gevoelig voor ruis. Daarom bereken je een gemiddelde afstand tussen de blobs. Hiervoor moet de functie \textit{calcAvgBlobDistance(self, blobList)} worden gemaakt in de \textit{vision} module. Deze krijgt als input de lijst met gegevens van blobs. Als output wordt de gemiddelde afstand (in pixels) tussen de gevonden blobs terug gegeven. Bij 1 (of 0) blobs kan er geen afstand worden berekend, en wordt er \textit{None} geretouneerd.
+
+Met deze code is het al mogelijk om op de juiste afstand te stoppen voor je landmark. Test je code en bepaal bij welke gemiddelde afstand de robot op de juiste afstand (ongeveer 44 cm) staat en laat de robot dan stoppen.
+
+\subsubsection{... en gaan}
+Voor het berekenen van de hoek naar een landmark, moet bekend zijn wat het midden van de landmark is. De functie die dit doet is \textit{calcMidLandmark(self, blobList)}. Als input krijgt het de lijst met gevonden blob-data en als output geeft het een x/y pixel positie die het midden aangeeft van de set van de gevonden blobs. Indien geen blobs zijn gevonden moet de functie \textit{None} terug geven.
+
+Wanneer het midden van de set van blobs bekend is, kan de hoek ten opzichte van de robot worden berekend (\textit{calcAngleLandmark(self, center)}). Hiervoor gebruik je de volgende informatie:
+De kijkhoek van de camera is ongeveer 70 graden (1.22 radialen). Een plaatje is 320 pixels breed, wat betekent dat een enkele pixel een hoek heeft van ongeveer 0.0038 radialen (1.22/320). Het midden van een plaatje heeft een hoek van 0 en een x/y pixel-positie van 160/120. \textit{None} moet worden geretouneerd wanneer geen blobs zijn gevonden en daarmee ook dus geen hoek kan worden berekend.
+
+Als laatste stap moet een functie (\textit{findSignature(self, blobList)}) worden gemaakt die bepaald wat de signature is van de geobserveerde landmark. De signatures zijn als volgt verdeeld:
+
+\begin{enumerate}
+\item - Blauw boven, finish
+\item - Blauw rechts, rechtsaf
+\item - Blauw links, linksaf
+\end{enumerate}
+
+Indien een landmark niet kan worden bepaald, is de signature gelijk aan -1.
+
+\subsection{Navigatie}
+
+Het is nu mogelijk, gegeven een snapshot, om blobs te vinden, de afstand tussen de blobs te berekenen (en daarmee de afstand van de robot naar de landmark te schatten) en de hoek naar de gevonden blobs te berekenen. Verder kan (indien er alle blobs zijn gevonden) de signature van de landmark worden achterhaald.
+
+Met al deze informatie kan de functie \textit{calcDirection(self, blobFound, blobDist, angle, signature)} worden gemaakt. Omdat dit geen vision-functie meer is, maar een behaviour moet een behaviour module worden aangemaakt.
+
+De main module zal nu een snapshot maken, all vision functies aanroepen en de resultaten doorgeven aan de behaviour module. Deze module zorgt er dan voor, afhankelijk van de input, welke richting de robot op moet lopen of draaien. 
+\\
+
+Hoe zorg je ervoor dat je robot het snelst door het doolhof gaat?
+
+\begin{itemize}
+\item Tip: omdat je in een modulair systeem werkt kun je snel meerdere kopieen van je modules maken en laden. Hiermee kun je makkelijk kleine aanpassingen testen, zonder werkende code te verliezen
+\item Tip: ALs je het makkelijker/mooier programmeren vindt kun je met behulp van simpele if-statements in je main bepalen wanneer het aanroepen van een functie wel of niet zin heeft.
+\end{itemize}
+
+\end{document}
